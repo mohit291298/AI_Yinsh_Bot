@@ -91,38 +91,53 @@ void Boardclass::convtodavid(int a,int b,int *arr){
 	arr[1] = b;
 	//assuming a is the x - coordinate 
 	//assuming b is the y - coordinate 
-	if ( b >= 0 && b <= a-1 ) {
-		arr[0] = b;
-		arr[1] = a;
-	}
+	// if ( b >= 0 && b <= a-1 ) {
+	// 	arr[0] = b;
+	// 	arr[1] = a;
+	// }
 
-	if ( b >= a && b <= 2*a - 1 ){
-		arr[0] = a;
-		arr[1] = 2*a - b;
-	}
+	// if ( b >= a && b <= 2*a - 1 ){
+	// 	arr[0] = a;
+	// 	arr[1] = 2*a - b;
+	// }
 
-	if ( b >= 2*a && b <= 3*a - 1 ){
-		arr[0] = 3*a - b;
-		arr[1] = 2*a - b;
-	}
+	// if ( b >= 2*a && b <= 3*a - 1 ){
+	// 	arr[0] = 3*a - b;
+	// 	arr[1] = 2*a - b;
+	// }
 
-	if ( b >= 3*a && b <= 4*a - 1 ){
-		arr[0] = 3*a - b;
-		arr[1] = -a;
-	}
+	// if ( b >= 3*a && b <= 4*a - 1 ){
+	// 	arr[0] = 3*a - b;
+	// 	arr[1] = -a;
+	// }
 
-	if ( b >= 4*a && b <= 5*a - 1 ){
-		arr[0] = -a;
-		arr[1] = b - 5*a;
-	}
+	// if ( b >= 4*a && b <= 5*a - 1 ){
+	// 	arr[0] = -a;
+	// 	arr[1] = b - 5*a;
+	// }
 
-	if ( b >= 5*a && b <= 6*a - 1 ){
-		arr[0] = b - 6*a;
-		arr[1] = b - 5*a;
-	}
+	// if ( b >= 5*a && b <= 6*a - 1 ){
+	// 	arr[0] = b - 6*a;
+	// 	arr[1] = b - 5*a;
+	// }
 
 }
 
+void Boardclass::copy_board(Boardclass& b){
+	for(int i=0;i<11;i++){
+		for(int j=0;j<11;j++)
+			board[i][j] = b.board[i][j];
+	}
+	my_ringsonboard = b.my_ringsonboard;
+	opp_ringsonboard = b.opp_ringsonboard;
+	for(int i=0;i<5;i++){
+		my_rings_x[i] = b.my_rings_x[i];
+		my_rings_y[i] = b.my_rings_y[i];
+		opp_rings_x[i] = b.opp_rings_x[i];
+		opp_rings_y[i] = b.opp_rings_y[i];
+	}
+
+}
 void Boardclass::update_board(string str,int p){
 
 	char cstr[str.size() +1];
