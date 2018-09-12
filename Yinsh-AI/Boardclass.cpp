@@ -123,6 +123,45 @@ void Boardclass::convtodavid(int a,int b,int *arr){
 
 }
 
+void Boardclass::convtorad(int a,int b,int *arr){
+	//convert radial to david coordinates
+	arr[0] = a;
+	arr[1] = b;
+	//assuming a is the x - coordinate 
+	//assuming b is the y - coordinate 
+	// if ( b >= 0 && b <= a-1 ) {
+	// 	arr[0] = b;
+	// 	arr[1] = a;
+	// }
+
+	// if ( b >= a && b <= 2*a - 1 ){
+	// 	arr[0] = a;
+	// 	arr[1] = 2*a - b;
+	// }
+
+	// if ( b >= 2*a && b <= 3*a - 1 ){
+	// 	arr[0] = 3*a - b;
+	// 	arr[1] = 2*a - b;
+	// }
+
+	// if ( b >= 3*a && b <= 4*a - 1 ){
+	// 	arr[0] = 3*a - b;
+	// 	arr[1] = -a;
+	// }
+
+	// if ( b >= 4*a && b <= 5*a - 1 ){
+	// 	arr[0] = -a;
+	// 	arr[1] = b - 5*a;
+	// }
+
+	// if ( b >= 5*a && b <= 6*a - 1 ){
+	// 	arr[0] = b - 6*a;
+	// 	arr[1] = b - 5*a;
+	// }
+
+}
+
+
 void Boardclass::copy_board(Boardclass& b){
 	for(int i=0;i<11;i++){
 		for(int j=0;j<11;j++)
@@ -461,7 +500,7 @@ void Boardclass::update_board(string str,int p){
 			}
 		}
 		token = strtok(NULL, " ");
-		if(token != NULL){
+		while(token != NULL){
 			// cout<<token<<"\n";
 			token = strtok(NULL, " ");
 			r = (atoi(token));
@@ -583,7 +622,7 @@ void Boardclass::update_board(string str,int p){
 				}
 				my_ringsonboard--;
 			}
-
+			token = strtok(NULL, " ");
 		}				
 	}
 	else if(token[0] == 'R' && token[1]=='S')
@@ -1000,7 +1039,7 @@ void Boardclass::update_board(string str,int p){
 				}
 			}
 			token = strtok(NULL, " ");
-			if(token != NULL){
+			while(token != NULL){
 				// cout<<token<<"\n";
 				token = strtok(NULL, " ");
 				r = (atoi(token));
@@ -1122,7 +1161,928 @@ void Boardclass::update_board(string str,int p){
 					}
 					my_ringsonboard--;
 				}
+				token = strtok(NULL, " ");
+			}				
+		}
+	}
+}
 
+//Call this function as follows:
+//Str is the string of move of the child(when u want to go back to parent)
+//p is the player no. of the parent or you can say 1+(player no. of child)%2
+
+void Boardclass::reverse_update(string str){
+	char cstr[str.size() +1];
+	strcpy(cstr,str.c_str());
+	char *token = strtok(cstr, " ");
+	
+	int arr[2];
+	int r,s;
+	if(token[0]=='P'){
+		token = strtok(NULL, " ");
+		r = (atoi(token));
+		token = strtok(NULL, " ");
+		s = (atoi(token));
+		convtodav(r,s,arr);
+		int x = arr[0];
+		int y = arr[1];
+		if(p!=1){
+			board[x+5][y+5]=0;
+			opp_rings_x[opp_ringsonboard] = x;
+			opp_rings_y[opp_ringsonboard] = y;
+			opp_ringsonboard++;
+
+		}
+		else{
+			board[x+5][y+5]=0;
+			my_rings_x[my_ringsonboard] = x;
+			my_rings_y[my_ringsonboard] = y;
+			my_ringsonboard++;
+		}
+	}
+	else if(token[0]=='S'){
+		token = strtok(NULL, " ");
+		r = (atoi(token));
+		token = strtok(NULL, " ");
+		s = (atoi(token));
+		convtodavid(r,s,arr);
+		int x2 = arr[0];
+		int y2 = arr[1];
+
+		token = strtok(NULL, " "); //this is M
+
+		token = strtok(NULL, " ");
+		r = (atoi(token));
+		token = strtok(NULL, " ");
+		s = (atoi(token));
+		convtodavid(r,s,arr);
+		int x1 = arr[0];
+		int y1 = arr[1];
+
+		int prev;
+		if(p!=1){
+			board[x1+5][y1+5]=0;
+			for(int i=0;i<opp_ringsonboard;i++){
+				if(opp_rings_x[i]==x1 && opp_rings_y[i]==y1){
+					prev = i;
+					break;
+				}
+			}
+		}
+		else{
+			board[x1+5][y1+5]=0;
+			for(int i=0;i<my_ringsonboard;i++){
+				if(my_rings_x[i]==x1 && my_rings_y[i]==y1){
+					prev = i;
+					break;
+				}
+			}
+		}
+		int a = x1;
+		int b = y1;
+		if(x1==x2){
+			if(y2>y1){
+				b++;
+				while(board[a+5][b+5]==0 && b<y2){
+					b++;
+				}
+				if(b==y2){
+					if(p!=1){
+						board[x2+5][y2+5]=4;
+						opp_rings_x[prev] = x2;
+						opp_rings_y[prev] = y2;
+						//opp_ringsonboard++;
+
+					}
+					else{
+						board[x2+5][y2+5]=3;
+						my_rings_x[prev] = x2;
+						my_rings_y[prev] = y2;
+						//my_ringsonboard++;
+					}
+				}
+				else{
+					while(b<y2){
+						board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						b++;
+					}
+					if(p!=1){
+						board[x2+5][y2+5]=4;
+						opp_rings_x[prev] = x2;
+						opp_rings_y[prev] = y2;
+						//opp_ringsonboard++;
+
+					}
+					else{
+						board[x2+5][y2+5]=3;
+						my_rings_x[prev] = x2;
+						my_rings_y[prev] = y2;
+						//my_ringsonboard++;
+					}
+				}
+			}
+			else if(y2 < y1){
+				b--;
+				while(board[a+5][b+5]==0 && b>y2){
+					b--;
+				}
+				if(b==y2){
+					if(p!=1){
+						board[x2+5][y2+5]=4;
+						opp_rings_x[prev] = x2;
+						opp_rings_y[prev] = y2;
+						//opp_ringsonboard++;
+
+					}
+					else{
+						board[x2+5][y2+5]=3;
+						my_rings_x[prev] = x2;
+						my_rings_y[prev] = y2;
+						//my_ringsonboard++;
+					}
+				}
+				else{
+					while(b>y2){
+						board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						b--;
+					}
+					if(p!=1){
+						board[x2+5][y2+5]=4;
+						opp_rings_x[prev] = x2;
+						opp_rings_y[prev] = y2;
+						//opp_ringsonboard++;
+
+					}
+					else{
+						board[x2+5][y2+5]=3;
+						my_rings_x[prev] = x2;
+						my_rings_y[prev] = y2;
+						//my_ringsonboard++;
+					}
+				}
+			}
+		}
+		else if(y1==y2){
+			if(x2>x1){
+				a++;
+				while(board[a+5][b+5]==0 && a<x2){
+					a++;
+				}
+				if(a==y2){
+					if(p!=1){
+						board[x2+5][y2+5]=4;
+						opp_rings_x[prev] = x2;
+						opp_rings_y[prev] = y2;
+						//opp_ringsonboard++;
+
+					}
+					else{
+						board[x2+5][y2+5]=3;
+						my_rings_x[prev] = x2;
+						my_rings_y[prev] = y2;
+						//my_ringsonboard++;
+					}
+				}
+				else{
+					while(a<x2){
+						board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						a++;
+					}
+					if(p!=1){
+						board[x2+5][y2+5]=4;
+						opp_rings_x[prev] = x2;
+						opp_rings_y[prev] = y2;
+						//opp_ringsonboard++;
+
+					}
+					else{
+						board[x2+5][y2+5]=3;
+						my_rings_x[prev] = x2;
+						my_rings_y[prev] = y2;
+						//my_ringsonboard++;
+					}
+				}
+			}
+			else if(x2 < x1){
+				a--;
+				while(board[a+5][b+5]==0 && a>x2){
+					a--;
+				}
+				if(a==x2){
+					if(p!=1){
+						board[x2+5][y2+5]=4;
+						opp_rings_x[prev] = x2;
+						opp_rings_y[prev] = y2;
+						//opp_ringsonboard++;
+
+					}
+					else{
+						board[x2+5][y2+5]=3;
+						my_rings_x[prev] = x2;
+						my_rings_y[prev] = y2;
+						//my_ringsonboard++;
+					}
+				}
+				else{
+					while(a>x2){
+						board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						a--;
+					}
+					if(p!=1){
+						board[x2+5][y2+5]=4;
+						opp_rings_x[prev] = x2;
+						opp_rings_y[prev] = y2;
+						//opp_ringsonboard++;
+
+					}
+					else{
+						board[x2+5][y2+5]=3;
+						my_rings_x[prev] = x2;
+						my_rings_y[prev] = y2;
+						//my_ringsonboard++;
+					}
+				}
+			}
+		}
+		else{
+			if(y2>y1){
+				b++;
+				a++;
+				while(board[a+5][b+5]==0 && b<y2){
+					b++;
+					a++;
+				}
+				if(b==y2){
+					if(p!=1){
+						board[x2+5][y2+5]=4;
+						opp_rings_x[prev] = x2;
+						opp_rings_y[prev] = y2;
+						//opp_ringsonboard++;
+
+					}
+					else{
+						board[x2+5][y2+5]=3;
+						my_rings_x[prev] = x2;
+						my_rings_y[prev] = y2;
+						//my_ringsonboard++;
+					}
+				}
+				else{
+					while(b<y2){
+						board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						b++;
+						a++;
+					}
+					if(p!=1){
+						board[x2+5][y2+5]=4;
+						opp_rings_x[prev] = x2;
+						opp_rings_y[prev] = y2;
+						//opp_ringsonboard++;
+
+					}
+					else{
+						board[x2+5][y2+5]=3;
+						my_rings_x[prev] = x2;
+						my_rings_y[prev] = y2;
+						//my_ringsonboard++;
+					}
+				}
+			}
+			else if(y2 < y1){
+				b--;
+				a--;
+				while(board[a+5][b+5]==0 && b>y2){
+					b--;
+					a--;
+				}
+				if(b==y2){
+					if(p!=1){
+						board[x2+5][y2+5]=4;
+						opp_rings_x[prev] = x2;
+						opp_rings_y[prev] = y2;
+						//opp_ringsonboard++;
+
+					}
+					else{
+						board[x2+5][y2+5]=3;
+						my_rings_x[prev] = x2;
+						my_rings_y[prev] = y2;
+						//my_ringsonboard++;
+					}
+				}
+				else{
+					while(b>y2){
+						board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						b--;
+						a--;
+					}
+					if(p!=1){
+						board[x2+5][y2+5]=4;
+						opp_rings_x[prev] = x2;
+						opp_rings_y[prev] = y2;
+						//opp_ringsonboard++;
+
+					}
+					else{
+						board[x2+5][y2+5]=3;
+						my_rings_x[prev] = x2;
+						my_rings_y[prev] = y2;
+						//my_ringsonboard++;
+					}
+				}
+			}
+		}
+		token = strtok(NULL, " ");
+		while(token != NULL){
+			// cout<<token<<"\n";
+			token = strtok(NULL, " ");
+			r = (atoi(token));
+			token = strtok(NULL, " ");
+			s = (atoi(token));
+			convtodavid(r,s,arr);
+			int a1 = arr[0];
+			int b1 = arr[1];
+			// cout<<a1<<" "<<b1<<"\n";
+
+			token = strtok(NULL, " "); //this is RE
+
+			token = strtok(NULL, " ");
+			r = (atoi(token));
+			token = strtok(NULL, " ");
+			s = (atoi(token));
+			convtodavid(r,s,arr);
+			int a2 = arr[0];
+			int b2 = arr[1];
+
+			token = strtok(NULL, " "); //this is X
+
+			// cout<<a2<<" "<<b2<<"\n";
+			token = strtok(NULL, " ");
+			r = (atoi(token));
+			token = strtok(NULL, " ");
+			s = (atoi(token));
+			convtodavid(r,s,arr);
+			int a3 = arr[0];
+			int b3 = arr[1];
+			// cout<<a3<<" "<<b3<<"\n";
+			int p1 = a1;
+			int q1 = b1;
+			if(a1==a2){
+				if(b2>b1){
+					while(q1!=b2){
+						board[p1+5][q1+5] = p;
+						q1++;
+					}
+				}
+				else{
+					while(q1!=b2){
+						board[p1+5][q1+5] = p;
+						q1--;
+					}					
+				}
+				board[a2+5][b2+5]=p;
+			}
+			else if(b1==b2){
+				if(a2>a1){
+					while(p1!=a2){
+						board[p1+5][q1+5] = p;
+						p1++;
+					}
+				}
+				else{
+					while(p1!=a2){
+						board[p1+5][q1+5] = p;
+						p1--;
+					}					
+				}
+				board[a2+5][b2+5]=p;
+			}
+			else{
+				if(b2>b1){
+					while(q1!=b2){
+						board[p1+5][q1+5] = p;
+						q1++;
+						p1++;
+					}
+				}
+				else{
+					while(q1!=b2){
+						board[p1+5][q1+5] = p;
+						q1--;
+						p1--;
+					}					
+				}
+				board[a2+5][b2+5]=p;
+			}
+
+			board[a3+5][b3+5] = p+2;
+			int prev2=0;
+			if(p!=1){
+				//board[x1+5][y1+5]=2;
+				opp_rings_x[opp_ringsonboard] = a3;
+				opp_rings_y[opp_ringsonboard] = b3;
+
+				opp_ringsonboard++;
+			}
+			else{
+				//board[x1+5][y1+5]=1;
+				my_rings_x[my_ringsonboard] = a3;
+				my_rings_y[my_ringsonboard] = b3;
+
+				my_ringsonboard++;
+			}
+			token = strtok(NULL, " ");
+		}				
+	}
+	else if(token[0] == 'R' && token[1]=='S')
+	{
+		r = (atoi(token));
+		token = strtok(NULL, " ");
+		s = (atoi(token));
+		convtodavid(r,s,arr);
+		int a1 = arr[0];
+		int b1 = arr[1];
+
+		token = strtok(NULL, " "); //this is M
+
+		token = strtok(NULL, " ");
+		r = (atoi(token));
+		token = strtok(NULL, " ");
+		s = (atoi(token));
+		convtodavid(r,s,arr);
+		int a2 = arr[0];
+		int b2 = arr[1];
+
+		token = strtok(NULL, " "); //this is M
+
+		token = strtok(NULL, " ");
+		r = (atoi(token));
+		token = strtok(NULL, " ");
+		s = (atoi(token));
+		convtodavid(r,s,arr);
+		int a3 = arr[0];
+		int b3 = arr[1];
+
+		int p1 = a1;
+		int q1 = b1;
+		if(a1==a2){
+			if(b2>b1){
+				while(q1!=b2){
+					board[p1+5][q1+5] = p;
+					q1++;
+				}
+			}
+			else{
+				while(q1!=b2){
+					board[p1+5][q1+5] = p;
+					q1--;
+				}					
+			}
+			board[a2+5][b2+5]=p;
+		}
+		else if(b1==b2){
+			if(a2>a1){
+				while(p1!=a2){
+					board[p1+5][q1+5] = p;
+					p1++;
+				}
+			}
+			else{
+				while(p1!=a2){
+					board[p1+5][q1+5] = p;
+					p1--;
+				}					
+			}
+			board[a2+5][b2+5]=p;
+		}
+		else{
+			if(b2>b1){
+				while(q1!=b2){
+					board[p1+5][q1+5] = p;
+					q1++;
+					p1++;
+				}
+			}
+			else{
+				while(q1!=b2){
+					board[p1+5][q1+5] = p;
+					q1--;
+					p1--;
+				}					
+			}
+			board[a2+5][b2+5]=p;
+		}
+		board[a3+5][b3+5] = p+2;
+		int prev2=0;
+		if(p!=1){
+			//board[x1+5][y1+5]=2;
+			opp_rings_x[opp_ringsonboard] = a3;
+			opp_rings_y[opp_ringsonboard] = b3;
+
+			opp_ringsonboard++;
+		}
+		else{
+			//board[x1+5][y1+5]=1;
+			my_rings_x[my_ringsonboard] = a3;
+			my_rings_y[my_ringsonboard] = b3;
+
+			my_ringsonboard++;
+		}
+
+		token = strtok(NULL, " ");
+
+		if(token[0]=='S'){
+			token = strtok(NULL, " ");
+			r = (atoi(token));
+			token = strtok(NULL, " ");
+			s = (atoi(token));
+			convtodavid(r,s,arr);
+			int x2 = arr[0];
+			int y2 = arr[1];
+
+			token = strtok(NULL, " "); //this is M
+
+			token = strtok(NULL, " ");
+			r = (atoi(token));
+			token = strtok(NULL, " ");
+			s = (atoi(token));
+			convtodavid(r,s,arr);
+			int x1 = arr[0];
+			int y1 = arr[1];
+
+			int prev;
+			if(p!=1){
+				board[x1+5][y1+5]=0;
+				for(int i=0;i<opp_ringsonboard;i++){
+					if(opp_rings_x[i]==x1 && opp_rings_y[i]==y1){
+						prev = i;
+						break;
+					}
+				}
+			}
+			else{
+				board[x1+5][y1+5]=0;
+				for(int i=0;i<my_ringsonboard;i++){
+					if(my_rings_x[i]==x1 && my_rings_y[i]==y1){
+						prev = i;
+						break;
+					}
+				}
+			}
+			int a = x1;
+			int b = y1;
+			if(x1==x2){
+				if(y2>y1){
+					b++;
+					while(board[a+5][b+5]==0 && b<y2){
+						b++;
+					}
+					if(b==y2){
+						if(p!=1){
+							board[x2+5][y2+5]=4;
+							opp_rings_x[prev] = x2;
+							opp_rings_y[prev] = y2;
+							//opp_ringsonboard++;
+
+						}
+						else{
+							board[x2+5][y2+5]=3;
+							my_rings_x[prev] = x2;
+							my_rings_y[prev] = y2;
+							//my_ringsonboard++;
+						}
+					}
+					else{
+						while(b<y2){
+							board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+							b++;
+						}
+						if(p!=1){
+							board[x2+5][y2+5]=4;
+							opp_rings_x[prev] = x2;
+							opp_rings_y[prev] = y2;
+							//opp_ringsonboard++;
+
+						}
+						else{
+							board[x2+5][y2+5]=3;
+							my_rings_x[prev] = x2;
+							my_rings_y[prev] = y2;
+							//my_ringsonboard++;
+						}
+					}
+				}
+				else if(y2 < y1){
+					b--;
+					while(board[a+5][b+5]==0 && b>y2){
+						b--;
+					}
+					if(b==y2){
+						if(p!=1){
+							board[x2+5][y2+5]=4;
+							opp_rings_x[prev] = x2;
+							opp_rings_y[prev] = y2;
+							//opp_ringsonboard++;
+
+						}
+						else{
+							board[x2+5][y2+5]=3;
+							my_rings_x[prev] = x2;
+							my_rings_y[prev] = y2;
+							//my_ringsonboard++;
+						}
+					}
+					else{
+						while(b>y2){
+							board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+							b--;
+						}
+						if(p!=1){
+							board[x2+5][y2+5]=4;
+							opp_rings_x[prev] = x2;
+							opp_rings_y[prev] = y2;
+							//opp_ringsonboard++;
+
+						}
+						else{
+							board[x2+5][y2+5]=3;
+							my_rings_x[prev] = x2;
+							my_rings_y[prev] = y2;
+							//my_ringsonboard++;
+						}
+					}
+				}
+			}
+			else if(y1==y2){
+				if(x2>x1){
+					a++;
+					while(board[a+5][b+5]==0 && a<x2){
+						a++;
+					}
+					if(a==y2){
+						if(p!=1){
+							board[x2+5][y2+5]=4;
+							opp_rings_x[prev] = x2;
+							opp_rings_y[prev] = y2;
+							//opp_ringsonboard++;
+
+						}
+						else{
+							board[x2+5][y2+5]=3;
+							my_rings_x[prev] = x2;
+							my_rings_y[prev] = y2;
+							//my_ringsonboard++;
+						}
+					}
+					else{
+						while(a<x2){
+							board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+							a++;
+						}
+						if(p!=1){
+							board[x2+5][y2+5]=4;
+							opp_rings_x[prev] = x2;
+							opp_rings_y[prev] = y2;
+							//opp_ringsonboard++;
+
+						}
+						else{
+							board[x2+5][y2+5]=3;
+							my_rings_x[prev] = x2;
+							my_rings_y[prev] = y2;
+							//my_ringsonboard++;
+						}
+					}
+				}
+				else if(x2 < x1){
+					a--;
+					while(board[a+5][b+5]==0 && a>x2){
+						a--;
+					}
+					if(a==x2){
+						if(p!=1){
+							board[x2+5][y2+5]=4;
+							opp_rings_x[prev] = x2;
+							opp_rings_y[prev] = y2;
+							//opp_ringsonboard++;
+
+						}
+						else{
+							board[x2+5][y2+5]=3;
+							my_rings_x[prev] = x2;
+							my_rings_y[prev] = y2;
+							//my_ringsonboard++;
+						}
+					}
+					else{
+						while(a>x2){
+							board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+							a--;
+						}
+						if(p!=1){
+							board[x2+5][y2+5]=4;
+							opp_rings_x[prev] = x2;
+							opp_rings_y[prev] = y2;
+							//opp_ringsonboard++;
+
+						}
+						else{
+							board[x2+5][y2+5]=3;
+							my_rings_x[prev] = x2;
+							my_rings_y[prev] = y2;
+							//my_ringsonboard++;
+						}
+					}
+				}
+			}
+			else{
+				if(y2>y1){
+					b++;
+					a++;
+					while(board[a+5][b+5]==0 && b<y2){
+						b++;
+						a++;
+					}
+					if(b==y2){
+						if(p!=1){
+							board[x2+5][y2+5]=4;
+							opp_rings_x[prev] = x2;
+							opp_rings_y[prev] = y2;
+							//opp_ringsonboard++;
+
+						}
+						else{
+							board[x2+5][y2+5]=3;
+							my_rings_x[prev] = x2;
+							my_rings_y[prev] = y2;
+							//my_ringsonboard++;
+						}
+					}
+					else{
+						while(b<y2){
+							board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+							b++;
+							a++;
+						}
+						if(p!=1){
+							board[x2+5][y2+5]=4;
+							opp_rings_x[prev] = x2;
+							opp_rings_y[prev] = y2;
+							//opp_ringsonboard++;
+
+						}
+						else{
+							board[x2+5][y2+5]=3;
+							my_rings_x[prev] = x2;
+							my_rings_y[prev] = y2;
+							//my_ringsonboard++;
+						}
+					}
+				}
+				else if(y2 < y1){
+					b--;
+					a--;
+					while(board[a+5][b+5]==0 && b>y2){
+						b--;
+						a--;
+					}
+					if(b==y2){
+						if(p!=1){
+							board[x2+5][y2+5]=4;
+							opp_rings_x[prev] = x2;
+							opp_rings_y[prev] = y2;
+							//opp_ringsonboard++;
+
+						}
+						else{
+							board[x2+5][y2+5]=3;
+							my_rings_x[prev] = x2;
+							my_rings_y[prev] = y2;
+							//my_ringsonboard++;
+						}
+					}
+					else{
+						while(b>y2){
+							board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+							b--;
+							a--;
+						}
+						if(p!=1){
+							board[x2+5][y2+5]=4;
+							opp_rings_x[prev] = x2;
+							opp_rings_y[prev] = y2;
+							//opp_ringsonboard++;
+
+						}
+						else{
+							board[x2+5][y2+5]=3;
+							my_rings_x[prev] = x2;
+							my_rings_y[prev] = y2;
+							//my_ringsonboard++;
+						}
+					}
+				}
+			}
+			token = strtok(NULL, " ");
+			while(token != NULL){
+				// cout<<token<<"\n";
+				token = strtok(NULL, " ");
+				r = (atoi(token));
+				token = strtok(NULL, " ");
+				s = (atoi(token));
+				convtodavid(r,s,arr);
+				int a1 = arr[0];
+				int b1 = arr[1];
+				// cout<<a1<<" "<<b1<<"\n";
+
+				token = strtok(NULL, " "); //this is RE
+
+				token = strtok(NULL, " ");
+				r = (atoi(token));
+				token = strtok(NULL, " ");
+				s = (atoi(token));
+				convtodavid(r,s,arr);
+				int a2 = arr[0];
+				int b2 = arr[1];
+
+				token = strtok(NULL, " "); //this is X
+
+				// cout<<a2<<" "<<b2<<"\n";
+				token = strtok(NULL, " ");
+				r = (atoi(token));
+				token = strtok(NULL, " ");
+				s = (atoi(token));
+				convtodavid(r,s,arr);
+				int a3 = arr[0];
+				int b3 = arr[1];
+				// cout<<a3<<" "<<b3<<"\n";
+				int p1 = a1;
+				int q1 = b1;
+				if(a1==a2){
+					if(b2>b1){
+						while(q1!=b2){
+							board[p1+5][q1+5] = p;
+							q1++;
+						}
+					}
+					else{
+						while(q1!=b2){
+							board[p1+5][q1+5] = p;
+							q1--;
+						}					
+					}
+					board[a2+5][b2+5]=p;
+				}
+				else if(b1==b2){
+					if(a2>a1){
+						while(p1!=a2){
+							board[p1+5][q1+5] = p;
+							p1++;
+						}
+					}
+					else{
+						while(p1!=a2){
+							board[p1+5][q1+5] = p;
+							p1--;
+						}					
+					}
+					board[a2+5][b2+5]=p;
+				}
+				else{
+					if(b2>b1){
+						while(q1!=b2){
+							board[p1+5][q1+5] = p;
+							q1++;
+							p1++;
+						}
+					}
+					else{
+						while(q1!=b2){
+							board[p1+5][q1+5] = p;
+							q1--;
+							p1--;
+						}					
+					}
+					board[a2+5][b2+5]=p;
+				}
+
+				board[a3+5][b3+5] = p+2;
+				int prev2=0;
+				if(p!=1){
+					//board[x1+5][y1+5]=2;
+					opp_rings_x[opp_ringsonboard] = a3;
+					opp_rings_y[opp_ringsonboard] = b3;
+
+					opp_ringsonboard++;
+				}
+				else{
+					//board[x1+5][y1+5]=1;
+					my_rings_x[my_ringsonboard] = a3;
+					my_rings_y[my_ringsonboard] = b3;
+
+					my_ringsonboard++;
+				}
+				token = strtok(NULL, " ");
 			}				
 		}
 	}

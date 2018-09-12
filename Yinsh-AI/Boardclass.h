@@ -17,8 +17,10 @@ public:
 
     Boardclass();
  
+    void reverse_update(string str,int p);
     void update_board(string str,int p);
     void convtodavid(int a,int b,int *arr);
+    void convtorad(int a,int b,int *arr);
     void copy_board(Boardclass& b);
  
 };

@@ -14,6 +14,7 @@ public:
 	Boardclass state;
 	double h;
 	string move;
+	int p;
 	//int num_child;
 	vector<Node*> children;
 

@@ -51,11 +51,44 @@ string convtorad(int x,int y){
 	return (str1.str() + " " + str2.str());
 }
 
+
+
+vector<int[4]> find_row(Boardclass b,int p){
+
+	int x1,y1,a,b;
+	int count =0;
+	vector<int[4]> vec;
+	for(int i=-5;i<=5;i++){
+		for(int j=-5;j<=5;j++){
+			if(count>=5){
+				if(b.board[i][j]== -1)
+				if(b.board[i][j]==p)
+					count++;	
+				j--;
+				vec.push_back([x1,y1,i,j]);
+				count = 0;
+				i= i-4;
+				j = j-4;
+			}
+			else if(count!=0){
+				if(b.board[i][j]==p)
+					count++;	
+			}
+			else if(b.board[i][j]==p){
+				x1 = i;
+				y1 = j;
+				count = 1;
+			}
+
+		}
+	}
+}
 void successor(Node n,int p){
 	int x,y,x1,y1,z1;
 	string ring_rad;
 	int val;
 	string str;
+	int flag =0;
 	for(int i=0;i<(n.state.my_ringsonboard);i++){
 		x = n.state.my_rings_x[i];
 		y = n.state.my_rings_y[i];
@@ -65,6 +98,7 @@ void successor(Node n,int p){
 		
 		y1 = y++;
 		x1 = x;
+		flag = 0;
 		if(y1<=5){
 			val = n.state.board[x1+5][y1+5];
 			while(val == 0 || val == 1 || val == 2){
@@ -94,17 +128,19 @@ void successor(Node n,int p){
 						t.state.my_rings_y[i] = y1;
 						//5 rings code
 					t.move += ("S "+ ring_rad +" M " + convtorad(x1,y1));
-						n.children.push_back(&t);					
+						n.children.push_back(&t);
+						flag =1;
 					}
 				}
 				y1++;
-				if(y1>5)
+				if(y1>5 || flag==1)
 					break;
 				val = n.state.board[x1+5][y1+5];
 			}
 		}
 		y1 = y--;
 		x1 = x;
+		flag = 0;
 		if(y1>=-5){
 			val = n.state.board[x1+5][y1+5];
 			while(val == 0 || val == 1 || val == 2){
@@ -134,17 +170,19 @@ void successor(Node n,int p){
 						t.state.my_rings_y[i] = y1;
 						//5 rings code
 					t.move += ("S "+ ring_rad +" M " + convtorad(x1,y1));
-						n.children.push_back(&t);					
+						n.children.push_back(&t);
+						flag = 1;					
 					}
 				}
 				y1--;
-				if(y1<-5)
+				if(y1<-5 || flag == 1)
 					break;
 				val = n.state.board[x1+5][y1+5];
 			}
 		}
 		y1 = y;
 		x1 = x++;
+		flag =0;
 		if(x1<=5){
 			val = n.state.board[x1+5][y1+5];
 			while(val == 0 || val == 1 || val == 2){
@@ -174,17 +212,19 @@ void successor(Node n,int p){
 						t.state.my_rings_y[i] = y1;
 						//5 rings code
 					t.move += ("S "+ ring_rad +" M " + convtorad(x1,y1));
-						n.children.push_back(&t);					
+						n.children.push_back(&t);	
+						flag = 1;				
 					}
 				}
 				x1++;
-				if(x1>5)
+				if(x1>5 || flag ==1)
 					break;
 				val = n.state.board[x1+5][y1+5];
 			}
 		}
 		y1 = y;
 		x1 = x--;
+		flag =0;
 		if(x1>=-5){
 			val = n.state.board[x1+5][y1+5];
 			while(val == 0 || val == 1 || val == 2){
@@ -214,17 +254,19 @@ void successor(Node n,int p){
 						t.state.my_rings_y[i] = y1;
 						//5 rings code
 					t.move += ("S "+ ring_rad +" M " + convtorad(x1,y1));
-						n.children.push_back(&t);					
+						n.children.push_back(&t);
+						flag = 1;					
 					}
 				}
 				x1--;
-				if(x1<-5)
+				if(x1<-5 || flag==1)
 					break;
 				val = n.state.board[x1+5][y1+5];
 			}
 		}
 		y1 = y++;
 		x1 = x++;
+		flag =0;
 		if(y1<=5 && x1<=5){
 			val = n.state.board[x1+5][y1+5];
 			while(val == 0 || val == 1 || val == 2){
@@ -255,18 +297,20 @@ void successor(Node n,int p){
 						t.state.my_rings_y[i] = y1;
 						//5 rings code
 					t.move += ("S "+ ring_rad +" M " + convtorad(x1,y1));
-						n.children.push_back(&t);					
+						n.children.push_back(&t);
+						flag = 1;					
 					}
 				}
 				y1++;
 				x1++;
-				if(y1>5 || x1>5)
+				if(y1>5 || x1>5 || flag==1)
 					break;
 				val = n.state.board[x1+5][y1+5];
 			}
 		}
 		y1 = y--;
 		x1 = x--;
+		flag =0;
 		if(y1>=-5 && x1>=-5){
 			val = n.state.board[x1+5][y1+5];
 			while(val == 0 || val == 1 || val == 2){
@@ -297,12 +341,13 @@ void successor(Node n,int p){
 						t.state.my_rings_y[i] = y1;
 						//5 rings code
 					t.move += ("S "+ ring_rad +" M " + convtorad(x1,y1));
-						n.children.push_back(&t);					
+						n.children.push_back(&t);
+						flag =1;					
 					}
 				}
 				y1--;
 				x1--;
-				if(y1<-5 || x1<-5)
+				if(y1<-5 || x1<-5 || flag==1)
 					break;
 				val = n.state.board[x1+5][y1+5];
 			}
