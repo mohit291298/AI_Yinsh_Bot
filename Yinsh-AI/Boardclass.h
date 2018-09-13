@@ -1,5 +1,6 @@
 #include <string>
 #include <cstring>
+#include <vector>
 
 #ifndef BOARDCLASS_H
 #define BOARDCLASS_H
@@ -22,7 +23,7 @@ public:
     void convtodavid(int a,int b,int *arr);
     void convtorad(int a,int b,int *arr);
     void copy_board(Boardclass& b);
- 
+    vector<int> find_row(int p);
 };
  
 #endif

@@ -13,7 +13,7 @@
 using namespace std;
 
 #define matrix_size 11;
-
+#define DBL_MAX 10000;
 // int board[11][11];
 /*-1 -> INVALID Position
 0 -> EMPTY position
@@ -42,319 +42,620 @@ std::string trim(const std::string& str,
 //p=1 if my chance(max node)
 //p=0 if opp chance(min node)
 
-string convtorad(int x,int y){
-	//convert here
+string convtorad(int a,int b){
+	//convert radial to david coordinates
+	int arr[2];
+	arr[0] = a;
+	arr[1] = b;
+	// assuming a is the x - coordinate 
+	// assuming b is the y - coordinate 
 
+	// if ( a * b > 0) {
+	// 	arr[0] = max(abs(a),abs(b));
+	// }
+	// else {
+	// 	arr[0] = abs(a) + abs(b);
+	// }
+	
+	// if ( b == arr[0] ) {
+	// 	arr[1] = a;
+	// 	//return;
+	// }
+	
+	// else if ( a == arr[0] ) {
+	// 	arr[1] =  2 * arr[0] - b; 
+	// }
+
+	// else if ( b == -1 * arr[0] ) {
+	// 	arr[1] = 3 * arr[0] - a ;
+	// 	//return;
+	// }
+
+	// if ( a == -1 * arr[0] ){
+	// 	arr[1] =  5 * arr[0] + a;
+	// 	//return;
+	// }
+
+	// else if ( a * b < 0 ){
+	// 	if ( a > 0 ){
+	// 		arr[1] = 2 * arr[0] - b;
+	// 		//return;
+	// 	}
+	// 	else if ( b > 0 ){
+	// 		arr[1] = 6 * arr[0] + a;
+	// 		//return;
+	// 	}
+	// }
 	ostringstream str1,str2;
-	str1 << x;
-	str2 <<y;
+	str1 << a;
+	str2 <<b;
 	return (str1.str() + " " + str2.str());
 }
 
-
-
-vector<int[4]> find_row(Boardclass b,int p){
-
-	int x1,y1,a,b;
-	int count =0;
-	vector<int[4]> vec;
-	for(int i=-5;i<=5;i++){
-		for(int j=-5;j<=5;j++){
-			if(count>=5){
-				if(b.board[i][j]== -1)
-				if(b.board[i][j]==p)
-					count++;	
-				j--;
-				vec.push_back([x1,y1,i,j]);
-				count = 0;
-				i= i-4;
-				j = j-4;
+void rsre(Boardclass& b,int a1,int b1,int a2,int b2,int color){
+	int p1 = a1;
+	int q1 = b1;
+	if(a1==a2){
+		if(b2>b1){
+			while(q1!=b2){
+				b.board[p1+5][q1+5] = color;
+				q1++;
 			}
-			else if(count!=0){
-				if(b.board[i][j]==p)
-					count++;	
-			}
-			else if(b.board[i][j]==p){
-				x1 = i;
-				y1 = j;
-				count = 1;
-			}
-
 		}
+		else{
+			while(q1!=b2){
+				b.board[p1+5][q1+5] = color;
+				q1--;
+			}					
+		}
+		b.board[a2+5][b2+5]=color;
+	}
+	else if(b1==b2){
+		if(a2>a1){
+			while(p1!=a2){
+				b.board[p1+5][q1+5] = color;
+				p1++;
+			}
+		}
+		else{
+			while(p1!=a2){
+				b.board[p1+5][q1+5] = color;
+				p1--;
+			}					
+		}
+		b.board[a2+5][b2+5]=0;
+	}
+	else{
+		if(b2>b1){
+			while(q1!=b2){
+				b.board[p1+5][q1+5] = color;
+				q1++;
+				p1++;
+			}
+		}
+		else{
+			while(q1!=b2){
+				b.board[p1+5][q1+5] = color;
+				q1--;
+				p1--;
+			}					
+		}
+		b.board[a2+5][b2+5]=0;
+	}
+
+}
+
+void extend_after_S(Node*& n,Boardclass& b,vector<int>& row,int p,string str){
+	// vector<int> row;
+	// row.swap(b.find_row(p));
+	int num_rings;
+	std::vector<int> temp_row;
+	if(p!=1)
+		num_rings = b.opp_ringsonboard;
+	else
+		num_rings = b.my_ringsonboard;
+	if(row.size()==0 || num_rings<=2){
+		//reverse_board(t.move[0],p);
+		Node t((p%2)+1);
+		t.move += str; 
+		n->children.push_back(&t);
+	}
+	else{
+		int it1=0;
+		int it2 = row.size();
+		int x1,y1,x2,y2;
+		int tempx,tempy;
+		while(it1<it2){
+			x1 = row[it1];
+			y1 = row[it1 + 1];
+			x2 = row[it1 + 2];
+			y2  = row[it1 + 3];
+			rsre(b,x1,y1,x2,y2,0);
+			str += (" RS "+ convtorad(x1,y1) +" RE " + convtorad(x2,y2));
+			if(p!=1){
+				for(int i=0;i<b.opp_ringsonboard;i++){
+					tempx = b.opp_rings_x[i];
+					tempy = b.opp_rings_y[i];
+					str += " X " + convtorad(tempx,tempy);
+					
+					for(int j=i;j<(b.opp_ringsonboard -1);j++){
+						b.opp_rings_x[j] = b.opp_rings_x[j+1];
+						b.opp_rings_y[j] = b.opp_rings_y[j+1];
+					}
+					b.opp_ringsonboard--;
+					b.board[b.opp_rings_x[i] + 5][b.opp_rings_y[i] + 5] = 0;
+
+					temp_row = b.find_row(p);
+					extend_after_S(n,b,temp_row,p,str);
+					
+					for(int j = (b.opp_ringsonboard+1);j>i;j--){
+						b.opp_rings_x[j] = b.opp_rings_x[j-1];
+						b.opp_rings_y[j] = b.opp_rings_y[j-1];
+					}
+					b.opp_rings_x[i] = tempx;
+					b.opp_rings_y[i] = tempy;
+					b.opp_ringsonboard++;
+					b.board[b.opp_rings_x[i] + 5][b.opp_rings_y[i] + 5] = 4;
+				}
+				rsre(b,x1,y1,x2,y2,2);
+			}
+			else{
+				for(int i=0;i<b.my_ringsonboard;i++){
+					tempx = b.my_rings_x[i];
+					tempy = b.my_rings_y[i];
+					str += " X " + convtorad(tempx,tempy);
+					
+					for(int j=i;j<(b.my_ringsonboard -1);j++){
+						b.my_rings_x[j] = b.my_rings_x[j+1];
+						b.my_rings_y[j] = b.my_rings_y[j+1];
+					}
+					b.my_ringsonboard--;
+					b.board[b.my_rings_x[i] + 5][b.my_rings_y[i] + 5] = 0;
+
+					temp_row = b.find_row(p);
+					extend_after_S(n,b,temp_row,p,str);
+					
+					for(int j = (b.my_ringsonboard+1);j>i;j--){
+						b.my_rings_x[j] = b.my_rings_x[j-1];
+						b.my_rings_y[j] = b.my_rings_y[j-1];
+					}
+					b.my_rings_x[i] = tempx;
+					b.my_rings_y[i] = tempy;
+					b.my_ringsonboard++;
+					b.board[b.my_rings_x[i] + 5][b.my_rings_y[i] + 5] = 3;
+				}
+				rsre(b,x1,y1,x2,y2,1);
+			}
+			it1 = it1 + 4;
+		}
+
 	}
 }
-void successor(Node n,int p){
+
+void extend_before_S(vector<Boardclass> &blist,vector<string> &strlist,Boardclass& b,vector<int> &row,int p,string str){
+	// vector<int> row;
+	// row.swap(b.find_row(p));
+	std::vector<int> temp_row;
+	int num_rings;
+	if(p!=1)
+		num_rings = b.opp_ringsonboard;
+	else
+		num_rings = b.my_ringsonboard;
+	if(row.size()==0 || num_rings<=2){
+		//reverse_board(t.move[0],p);
+		Boardclass bcopy;
+		bcopy.copy_board(b);
+		blist.push_back(bcopy);
+		strlist.push_back(str);
+	}
+	else{
+		int it1=0;
+		int it2 = row.size();
+		int x1,y1,x2,y2;
+		int tempx,tempy;
+		while(it1<it2){
+			x1 = row[it1];
+			y1 = row[it1 + 1];
+			x2 = row[it1 + 2];
+			y2  = row[it1 + 3];
+			rsre(b,x1,y1,x2,y2,0);
+			if(str.length()==0)
+				str += ("RS "+ convtorad(x1,y1) +" RE " + convtorad(x2,y2));
+			else
+				str += (" RS "+ convtorad(x1,y1) +" RE " + convtorad(x2,y2));
+			if(p!=1){
+				for(int i=0;i<b.opp_ringsonboard;i++){
+					tempx = b.opp_rings_x[i];
+					tempy = b.opp_rings_y[i];
+					str += " X " + convtorad(tempx,tempy);
+					
+					for(int j=i;j<(b.opp_ringsonboard -1);j++){
+						b.opp_rings_x[j] = b.opp_rings_x[j+1];
+						b.opp_rings_y[j] = b.opp_rings_y[j+1];
+					}
+					b.opp_ringsonboard--;
+					b.board[b.opp_rings_x[i] + 5][b.opp_rings_y[i] + 5] = 0;
+					temp_row = b.find_row(p);
+					extend_before_S(blist,strlist,b,temp_row,p,str);
+					
+					for(int j = (b.opp_ringsonboard+1);j>i;j--){
+						b.opp_rings_x[j] = b.opp_rings_x[j-1];
+						b.opp_rings_y[j] = b.opp_rings_y[j-1];
+					}
+					b.opp_rings_x[i] = tempx;
+					b.opp_rings_y[i] = tempy;
+					b.opp_ringsonboard++;
+					b.board[b.opp_rings_x[i] + 5][b.opp_rings_y[i] + 5] = 4;
+				}
+				rsre(b,x1,y1,x2,y2,2);
+			}
+			else{
+				for(int i=0;i<b.my_ringsonboard;i++){
+					tempx = b.my_rings_x[i];
+					tempy = b.my_rings_y[i];
+					str += " X " + convtorad(tempx,tempy);
+					
+					for(int j=i;j<(b.my_ringsonboard -1);j++){
+						b.my_rings_x[j] = b.my_rings_x[j+1];
+						b.my_rings_y[j] = b.my_rings_y[j+1];
+					}
+					b.my_ringsonboard--;
+					b.board[b.my_rings_x[i]+ 5][b.my_rings_y[i] + 5] = 0;
+
+					temp_row = b.find_row(p);
+					extend_before_S(blist,strlist,b,temp_row,p,str);
+					
+					for(int j = (b.my_ringsonboard+1);j>i;j--){
+						b.my_rings_x[j] = b.my_rings_x[j-1];
+						b.my_rings_y[j] = b.my_rings_y[j-1];
+					}
+					b.my_rings_x[i] = tempx;
+					b.my_rings_y[i] = tempy;
+					b.my_ringsonboard++;
+					b.board[b.my_rings_x[i] + 5][b.my_rings_y[i] + 5] = 3;
+				}
+				rsre(b,x1,y1,x2,y2,1);
+			}
+			it1 = it1 + 4;
+		}
+
+	}
+}
+
+void successor(Boardclass& b, Node*& n, int p){
 	int x,y,x1,y1,z1;
 	string ring_rad;
 	int val;
-	string str;
+	string str = "";
 	int flag =0;
-	for(int i=0;i<(n.state.my_ringsonboard);i++){
-		x = n.state.my_rings_x[i];
-		y = n.state.my_rings_y[i];
-		ring_rad = convtorad(x,y);
+	int num_rings;
+	std::vector<int> temp_row;
+	if(n->visited==0){
 
-		//5 rings code
+		std::vector<Boardclass> blist;
+		std::vector<string> strlist;
+		temp_row = b.find_row(p);
+		extend_before_S(blist,strlist,b,temp_row,p,str);
 		
-		y1 = y++;
-		x1 = x;
-		flag = 0;
-		if(y1<=5){
-			val = n.state.board[x1+5][y1+5];
-			while(val == 0 || val == 1 || val == 2){
-				if(val==0){
-					Node t(n.state);
-					t.state.board[x+5][y+5] = 1;
-					t.state.board[x1+5][y1+5] = 3;
-					t.state.my_rings_x[i] = x1;
-					t.state.my_rings_y[i] = y1;
-					//5 rings code
-					t.move += ("S "+ ring_rad +" M " + convtorad(x1,y1));
-					n.children.push_back(&t);
-				}
-				else{
-					Node t(n.state);
-					while(val==1 || val==2){
-						t.state.board[x1+5][y1+5] = (t.state.board[x1+5][y1+5] % 2) + 1;
-						y1++;
-						if(y1>5)
-							break;
-						val = n.state.board[x1+5][y1+5];
-					}
-					if(val==0 && y1<=5){
-						t.state.board[x+5][y+5] = 1;
-						t.state.board[x1+5][y1+5] = 3;
-						t.state.my_rings_x[i] = x1;
-						t.state.my_rings_y[i] = y1;
-						//5 rings code
-					t.move += ("S "+ ring_rad +" M " + convtorad(x1,y1));
-						n.children.push_back(&t);
-						flag =1;
-					}
-				}
-				y1++;
-				if(y1>5 || flag==1)
-					break;
-				val = n.state.board[x1+5][y1+5];
-			}
-		}
-		y1 = y--;
-		x1 = x;
-		flag = 0;
-		if(y1>=-5){
-			val = n.state.board[x1+5][y1+5];
-			while(val == 0 || val == 1 || val == 2){
-				if(val==0){
-					Node t(n.state);
-					t.state.board[x+5][y+5] = 1;
-					t.state.board[x1+5][y1+5] = 3;
-					t.state.my_rings_x[i] = x1;
-					t.state.my_rings_y[i] = y1;
-					//5 rings code
-					t.move += ("S "+ ring_rad +" M " + convtorad(x1,y1));
-					n.children.push_back(&t);
-				}
-				else{
-					Node t(n.state);
-					while(val==1 || val==2){
-						t.state.board[x1+5][y1+5] = (t.state.board[x1+5][y1+5] % 2) + 1;
-						y1--;
-						if(y1<-5)
-							break;
-						val = n.state.board[x1+5][y1+5];
-					}
-					if(val==0 && y1>=-5){
-						t.state.board[x+5][y+5] = 1;
-						t.state.board[x1+5][y1+5] = 3;
-						t.state.my_rings_x[i] = x1;
-						t.state.my_rings_y[i] = y1;
-						//5 rings code
-					t.move += ("S "+ ring_rad +" M " + convtorad(x1,y1));
-						n.children.push_back(&t);
-						flag = 1;					
-					}
-				}
-				y1--;
-				if(y1<-5 || flag == 1)
-					break;
-				val = n.state.board[x1+5][y1+5];
-			}
-		}
-		y1 = y;
-		x1 = x++;
-		flag =0;
-		if(x1<=5){
-			val = n.state.board[x1+5][y1+5];
-			while(val == 0 || val == 1 || val == 2){
-				if(val==0){
-					Node t(n.state);
-					t.state.board[x+5][y+5] = 1;
-					t.state.board[x1+5][y1+5] = 3;
-					t.state.my_rings_x[i] = x1;
-					t.state.my_rings_y[i] = y1;
-					//5 rings code
-					t.move += ("S "+ ring_rad +" M " + convtorad(x1,y1));
-					n.children.push_back(&t);
-				}
-				else{
-					Node t(n.state);
-					while(val==1 || val==2){
-						t.state.board[x1+5][y1+5] = (t.state.board[x1+5][y1+5] % 2) + 1;
-						x1++;
-						if(x1>5)
-							break;
-						val = n.state.board[x1+5][y1+5];
-					}
-					if(val==0 && x1<=5){
-						t.state.board[x+5][y+5] = 1;
-						t.state.board[x1+5][y1+5] = 3;
-						t.state.my_rings_x[i] = x1;
-						t.state.my_rings_y[i] = y1;
-						//5 rings code
-					t.move += ("S "+ ring_rad +" M " + convtorad(x1,y1));
-						n.children.push_back(&t);	
-						flag = 1;				
-					}
-				}
-				x1++;
-				if(x1>5 || flag ==1)
-					break;
-				val = n.state.board[x1+5][y1+5];
-			}
-		}
-		y1 = y;
-		x1 = x--;
-		flag =0;
-		if(x1>=-5){
-			val = n.state.board[x1+5][y1+5];
-			while(val == 0 || val == 1 || val == 2){
-				if(val==0){
-					Node t(n.state);
-					t.state.board[x+5][y+5] = 1;
-					t.state.board[x1+5][y1+5] = 3;
-					t.state.my_rings_x[i] = x1;
-					t.state.my_rings_y[i] = y1;
-					//5 rings code
-					t.move += ("S "+ ring_rad +" M " + convtorad(x1,y1));
-					n.children.push_back(&t);
-				}
-				else{
-					Node t(n.state);
-					while(val==1 || val==2){
-						t.state.board[x1+5][y1+5] = (t.state.board[x1+5][y1+5] % 2) + 1;
-						x1--;
-						if(x1<-5)
-							break;
-						val = n.state.board[x1+5][y1+5];
-					}
-					if(val==0 && x1>=-5){
-						t.state.board[x+5][y+5] = 1;
-						t.state.board[x1+5][y1+5] = 3;
-						t.state.my_rings_x[i] = x1;
-						t.state.my_rings_y[i] = y1;
-						//5 rings code
-					t.move += ("S "+ ring_rad +" M " + convtorad(x1,y1));
-						n.children.push_back(&t);
-						flag = 1;					
-					}
-				}
-				x1--;
-				if(x1<-5 || flag==1)
-					break;
-				val = n.state.board[x1+5][y1+5];
-			}
-		}
-		y1 = y++;
-		x1 = x++;
-		flag =0;
-		if(y1<=5 && x1<=5){
-			val = n.state.board[x1+5][y1+5];
-			while(val == 0 || val == 1 || val == 2){
-				if(val==0){
-					Node t(n.state);
-					t.state.board[x+5][y+5] = 1;
-					t.state.board[x1+5][y1+5] = 3;
-					t.state.my_rings_x[i] = x1;
-					t.state.my_rings_y[i] = y1;
-					//5 rings code
-					t.move += ("S "+ ring_rad +" M " + convtorad(x1,y1));
-					n.children.push_back(&t);
-				}
-				else{
-					Node t(n.state);
-					while(val==1 || val==2){
-						t.state.board[x1+5][y1+5] = (t.state.board[x1+5][y1+5] % 2) + 1;
-						y1++;
-						x1++;
-						if(y1>5 || x1>5)
-							break;
-						val = n.state.board[x1+5][y1+5];
-					}
-					if(val==0 && y1<=5 && x1<=5){
-						t.state.board[x+5][y+5] = 1;
-						t.state.board[x1+5][y1+5] = 3;
-						t.state.my_rings_x[i] = x1;
-						t.state.my_rings_y[i] = y1;
-						//5 rings code
-					t.move += ("S "+ ring_rad +" M " + convtorad(x1,y1));
-						n.children.push_back(&t);
-						flag = 1;					
-					}
-				}
-				y1++;
-				x1++;
-				if(y1>5 || x1>5 || flag==1)
-					break;
-				val = n.state.board[x1+5][y1+5];
-			}
-		}
-		y1 = y--;
-		x1 = x--;
-		flag =0;
-		if(y1>=-5 && x1>=-5){
-			val = n.state.board[x1+5][y1+5];
-			while(val == 0 || val == 1 || val == 2){
-				if(val==0){
-					Node t(n.state);
-					t.state.board[x+5][y+5] = 1;
-					t.state.board[x1+5][y1+5] = 3;
-					t.state.my_rings_x[i] = x1;
-					t.state.my_rings_y[i] = y1;
-					//5 rings code
-					t.move += ("S "+ ring_rad +" M " + convtorad(x1,y1));
-					n.children.push_back(&t);
-				}
-				else{
-					Node t(n.state);
-					while(val==1 || val==2){
-						t.state.board[x1+5][y1+5] = (t.state.board[x1+5][y1+5] % 2) + 1;
-						y1--;
-						x1--;
-						if(y1<-5 || x1<-5)
-							break;
-						val = n.state.board[x1+5][y1+5];
-					}
-					if(val==0 && y1>=-5 && x1>=-5){
-						t.state.board[x+5][y+5] = 1;
-						t.state.board[x1+5][y1+5] = 3;
-						t.state.my_rings_x[i] = x1;
-						t.state.my_rings_y[i] = y1;
-						//5 rings code
-					t.move += ("S "+ ring_rad +" M " + convtorad(x1,y1));
-						n.children.push_back(&t);
-						flag =1;					
-					}
-				}
-				y1--;
-				x1--;
-				if(y1<-5 || x1<-5 || flag==1)
-					break;
-				val = n.state.board[x1+5][y1+5];
-			}
-		}
+		for(int k=0;k<(blist.size());k++){
 
+			if(p!=1)
+				num_rings = blist[k].opp_ringsonboard;
+			else
+				num_rings = blist[k].my_ringsonboard;
+
+			for(int i=0;i<num_rings;i++){
+				if(p!=1){
+					x = blist[k].opp_rings_x[i];
+					y = blist[k].opp_rings_y[i];
+				}
+				else{
+					x = blist[k].my_rings_x[i];
+					y = blist[k].my_rings_y[i];
+				}
+				ring_rad = convtorad(x,y);
+
+				//5 rings code
+				
+				y1 = y++;
+				x1 = x;
+				flag = 0;
+				if(y1<=5){
+					val = blist[k].board[x1+5][y1+5];
+					while(val == 0 || val == 1 || val == 2){
+						if(val==0){
+							if(strlist[k].length()==0)
+								strlist[k] += ("S "+ ring_rad +" M " + convtorad(x1,y1));
+							else
+								strlist[k] += (" S "+ ring_rad +" M " + convtorad(x1,y1));
+							blist[k].update_board(strlist[k],p);
+							temp_row = blist[k].find_row(p);
+							extend_after_S(n,blist[k],temp_row,p,strlist[k]);
+							blist[k].reverse_update(strlist[k],p);					
+						}		
+						else{
+							flag =1;
+							while(val==1 || val==2){
+								y1++;
+								if(y1>5)
+									break;
+								val = blist[k].board[x1+5][y1+5];
+							}
+							if(val==0 && y1<=5){
+							if(strlist[k].length()==0)
+								strlist[k] += ("S "+ ring_rad +" M " + convtorad(x1,y1));
+							else
+								strlist[k] += (" S "+ ring_rad +" M " + convtorad(x1,y1));
+								blist[k].update_board(strlist[k],p);
+							temp_row = blist[k].find_row(p);
+							extend_after_S(n,blist[k],temp_row,p,strlist[k]);
+								blist[k].reverse_update(strlist[k],p);					
+							}
+						}
+						y1++;
+						if(y1>5 || flag==1)
+							break;
+						val = blist[k].board[x1+5][y1+5];
+					}
+				}
+				y1 = y--;
+				x1 = x;
+				flag = 0;
+				if(y1>=-5){
+					val = blist[k].board[x1+5][y1+5];
+					while(val == 0 || val == 1 || val == 2){
+						if(val==0){
+							if(strlist[k].length()==0)
+								strlist[k] += ("S "+ ring_rad +" M " + convtorad(x1,y1));
+							else
+								strlist[k] += (" S "+ ring_rad +" M " + convtorad(x1,y1));
+							blist[k].update_board(strlist[k],p);
+							temp_row = blist[k].find_row(p);
+							extend_after_S(n,blist[k],temp_row,p,strlist[k]);
+							blist[k].reverse_update(strlist[k],p);					
+						}
+						else{
+							flag = 1;
+							while(val==1 || val==2){
+								y1--;
+								if(y1<-5)
+									break;
+								val = blist[k].board[x1+5][y1+5];
+							}
+							if(val==0 && y1>=-5){
+							if(strlist[k].length()==0)
+								strlist[k] += ("S "+ ring_rad +" M " + convtorad(x1,y1));
+							else
+								strlist[k] += (" S "+ ring_rad +" M " + convtorad(x1,y1));
+								blist[k].update_board(strlist[k],p);
+							temp_row = blist[k].find_row(p);
+							extend_after_S(n,blist[k],temp_row,p,strlist[k]);
+								blist[k].reverse_update(strlist[k],p);					
+							}
+						}
+						y1--;
+						if(y1<-5 || flag == 1)
+							break;
+						val = blist[k].board[x1+5][y1+5];
+					}
+				}
+				y1 = y;
+				x1 = x++;
+				flag =0;
+				if(x1<=5){
+					val = blist[k].board[x1+5][y1+5];
+					while(val == 0 || val == 1 || val == 2){
+						if(val==0){
+							if(strlist[k].length()==0)
+								strlist[k] += ("S "+ ring_rad +" M " + convtorad(x1,y1));
+							else
+								strlist[k] += (" S "+ ring_rad +" M " + convtorad(x1,y1));
+							blist[k].update_board(strlist[k],p);
+							temp_row = blist[k].find_row(p);
+							extend_after_S(n,blist[k],temp_row,p,strlist[k]);
+							blist[k].reverse_update(strlist[k],p);					
+						}
+						else{
+							flag = 1;
+							while(val==1 || val==2){
+								x1++;
+								if(x1>5)
+									break;
+								val = blist[k].board[x1+5][y1+5];
+							}
+							if(val==0 && x1<=5){
+							if(strlist[k].length()==0)
+								strlist[k] += ("S "+ ring_rad +" M " + convtorad(x1,y1));
+							else
+								strlist[k] += (" S "+ ring_rad +" M " + convtorad(x1,y1));
+								blist[k].update_board(strlist[k],p);
+							temp_row = blist[k].find_row(p);
+							extend_after_S(n,blist[k],temp_row,p,strlist[k]);
+								blist[k].reverse_update(strlist[k],p);					
+							}
+						}
+						x1++;
+						if(x1>5 || flag ==1)
+							break;
+						val = blist[k].board[x1+5][y1+5];
+					}
+				}
+				y1 = y;
+				x1 = x--;
+				flag =0;
+				if(x1>=-5){
+					val = blist[k].board[x1+5][y1+5];
+					while(val == 0 || val == 1 || val == 2){
+						if(val==0){
+							if(strlist[k].length()==0)
+								strlist[k] += ("S "+ ring_rad +" M " + convtorad(x1,y1));
+							else
+								strlist[k] += (" S "+ ring_rad +" M " + convtorad(x1,y1));
+							blist[k].update_board(strlist[k],p);
+							temp_row = blist[k].find_row(p);
+							extend_after_S(n,blist[k],temp_row,p,strlist[k]);
+							blist[k].reverse_update(strlist[k],p);					
+						}
+						else{
+							flag = 1;
+							while(val==1 || val==2){
+								x1--;
+								if(x1<-5)
+									break;
+								val = blist[k].board[x1+5][y1+5];
+							}
+							if(val==0 && x1>=-5){
+							if(strlist[k].length()==0)
+								strlist[k] += ("S "+ ring_rad +" M " + convtorad(x1,y1));
+							else
+								strlist[k] += (" S "+ ring_rad +" M " + convtorad(x1,y1));
+								blist[k].update_board(strlist[k],p);
+							temp_row = blist[k].find_row(p);
+							extend_after_S(n,blist[k],temp_row,p,strlist[k]);
+								blist[k].reverse_update(strlist[k],p);					
+							}
+						}
+						x1--;
+						if(x1<-5 || flag==1)
+							break;
+						val = blist[k].board[x1+5][y1+5];
+					}
+				}
+				y1 = y++;
+				x1 = x++;
+				flag =0;
+				if(y1<=5 && x1<=5){
+					val = blist[k].board[x1+5][y1+5];
+					while(val == 0 || val == 1 || val == 2){
+						if(val==0){
+							if(strlist[k].length()==0)
+								strlist[k] += ("S "+ ring_rad +" M " + convtorad(x1,y1));
+							else
+								strlist[k] += (" S "+ ring_rad +" M " + convtorad(x1,y1));
+							blist[k].update_board(strlist[k],p);
+							temp_row = blist[k].find_row(p);
+							extend_after_S(n,blist[k],temp_row,p,strlist[k]);
+							blist[k].reverse_update(strlist[k],p);					
+						}
+						else{
+							flag = 1;
+							while(val==1 || val==2){
+								y1++;
+								x1++;
+								if(y1>5 || x1>5)
+									break;
+								val = blist[k].board[x1+5][y1+5];
+							}
+							if(val==0 && y1<=5 && x1<=5){
+							if(strlist[k].length()==0)
+								strlist[k] += ("S "+ ring_rad +" M " + convtorad(x1,y1));
+							else
+								strlist[k] += (" S "+ ring_rad +" M " + convtorad(x1,y1));
+								blist[k].update_board(strlist[k],p);
+							temp_row = blist[k].find_row(p);
+							extend_after_S(n,blist[k],temp_row,p,strlist[k]);
+								blist[k].reverse_update(strlist[k],p);					
+							}
+						}
+						y1++;
+						x1++;
+						if(y1>5 || x1>5 || flag==1)
+							break;
+						val = blist[k].board[x1+5][y1+5];
+					}
+				}
+				y1 = y--;
+				x1 = x--;
+				flag =0;
+				if(y1>=-5 && x1>=-5){
+					val = blist[k].board[x1+5][y1+5];
+					while(val == 0 || val == 1 || val == 2){
+						if(val==0){
+							if(strlist[k].length()==0)
+								strlist[k] += ("S "+ ring_rad +" M " + convtorad(x1,y1));
+							else
+								strlist[k] += (" S "+ ring_rad +" M " + convtorad(x1,y1));
+							blist[k].update_board(strlist[k],p);
+							temp_row = blist[k].find_row(p);
+							extend_after_S(n,blist[k],temp_row,p,strlist[k]);
+							blist[k].reverse_update(strlist[k],p);					
+						}
+						else{
+							flag =1;
+							while(val==1 || val==2){
+								y1--;
+								x1--;
+								if(y1<-5 || x1<-5)
+									break;
+								val = blist[k].board[x1+5][y1+5];
+							}
+							if(val==0 && y1>=-5 && x1>=-5){
+							if(strlist[k].length()==0)
+								strlist[k] += ("S "+ ring_rad +" M " + convtorad(x1,y1));
+							else
+								strlist[k] += (" S "+ ring_rad +" M " + convtorad(x1,y1));
+								blist[k].update_board(strlist[k],p);
+							temp_row = blist[k].find_row(p);
+							extend_after_S(n,blist[k],temp_row,p,strlist[k]);
+								blist[k].reverse_update(strlist[k],p);					
+							}
+						}
+						y1--;
+						x1--;
+						if(y1<-5 || x1<-5 || flag==1)
+							break;
+						val = blist[k].board[x1+5][y1+5];
+					}
+				}
+			}
+		}
 	}
+	n->visited = 1;
 }
+
+double calculateHeuristic(Node*& n){
+	return 0;
+}
+void createTree ( Node*& n, int depth, int max_depth, int p, Boardclass& b ) {
+
+    if (depth > max_depth) {return;}
+    if (depth == max_depth) {
+        n->h = calculateHeuristic(n);
+    }
+
+    if ( depth < max_depth ){
+        double parent_heuristic;
+        if(p!=1){
+        	parent_heuristic = DBL_MAX;
+        }
+        else{
+        	parent_heuristic = -DBL_MAX;
+        }
+        successor(b, n, p);
+        for ( int i = 0; i < n->children.size(); i++ ){
+            b.update_board( n->children[i]->move, p );
+            createTree( n->children.at(i), depth + 1, max_depth, (p%2) + 1, b);
+            if (p == 1){
+                // parent_heuristic = -DBL_MAX;
+                if ( parent_heuristic < n->children.at(i)->h ){
+                    parent_heuristic = n->children.at(i)->h;
+                }
+                else {continue;}
+            }
+            else if ( p == 2 ){
+                // parent_heuristic = DBL_MAX;
+                if ( parent_heuristic > n->children.at(i)->h ){
+                    parent_heuristic = n->children.at(i)->h;
+                }
+                else {continue;}
+            }
+            b.reverse_update( n->children[i]->move, p );
+
+        }
+    }
+
+}
+
 
 int main(){
 

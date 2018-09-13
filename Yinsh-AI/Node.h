@@ -11,14 +11,15 @@ class Node
 {
 
 public:
-	Boardclass state;
+	//Boardclass state;
 	double h;
 	string move;
 	int p;
+	int visited;
 	//int num_child;
 	vector<Node*> children;
 
-    Node(Boardclass b);
+    Node(int p1);
   
 };
  

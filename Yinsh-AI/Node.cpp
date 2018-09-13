@@ -8,9 +8,11 @@
 using namespace std;
 
 // constructor
-Node::Node(Boardclass b){
-	state.copy_board(b);
+Node::Node(int p1){
+	//state.copy_board(b);
 	//num_child = 0;
 	move = "";
+	visited = 0;
+	p = p1;
 	h = 0;
 }

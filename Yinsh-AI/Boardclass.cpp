@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <algorithm>
+#include <utility>
 #include "Boardclass.h"
 
 using namespace std;
@@ -129,38 +130,46 @@ void Boardclass::convtorad(int a,int b,int *arr){
 	arr[1] = b;
 	//assuming a is the x - coordinate 
 	//assuming b is the y - coordinate 
-	// if ( b >= 0 && b <= a-1 ) {
-	// 	arr[0] = b;
+
+	// if ( a * b > 0) {
+	// 	arr[0] = max(abs(a),abs(b));
+	// }
+	// else {
+	// 	arr[0] = abs(a) + abs(b);
+	// }
+	
+	// if ( b == arr[0] ) {
 	// 	arr[1] = a;
+	// 	return;
+	// }
+	
+	// if ( a == arr[0] ) {
+	// 	arr[1] =  2 * arr[0] - b; 
+	// 	return;
 	// }
 
-	// if ( b >= a && b <= 2*a - 1 ){
-	// 	arr[0] = a;
-	// 	arr[1] = 2*a - b;
+	// if ( b == -1 * arr[0] ) {
+	// 	arr[1] = 3 * arr[0] - a ;
+	// 	return;
 	// }
 
-	// if ( b >= 2*a && b <= 3*a - 1 ){
-	// 	arr[0] = 3*a - b;
-	// 	arr[1] = 2*a - b;
+	// if ( a == -1 * arr[0] ){
+	// 	arr[1] =  5 * arr[0] + a;
+	// 	return;
 	// }
 
-	// if ( b >= 3*a && b <= 4*a - 1 ){
-	// 	arr[0] = 3*a - b;
-	// 	arr[1] = -a;
-	// }
-
-	// if ( b >= 4*a && b <= 5*a - 1 ){
-	// 	arr[0] = -a;
-	// 	arr[1] = b - 5*a;
-	// }
-
-	// if ( b >= 5*a && b <= 6*a - 1 ){
-	// 	arr[0] = b - 6*a;
-	// 	arr[1] = b - 5*a;
+	// if ( a * b < 0 ){
+	// 	if ( a > 0 ){
+	// 		arr[1] = 2 * arr[0] - b;
+	// 		return;
+	// 	}
+	// 	if ( b > 0 ){
+	// 		arr[1] = 6 * arr[0] + a;
+	// 		return;
+	// 	}
 	// }
 
 }
-
 
 void Boardclass::copy_board(Boardclass& b){
 	for(int i=0;i<11;i++){
@@ -1171,7 +1180,7 @@ void Boardclass::update_board(string str,int p){
 //Str is the string of move of the child(when u want to go back to parent)
 //p is the player no. of the parent or you can say 1+(player no. of child)%2
 
-void Boardclass::reverse_update(string str){
+void Boardclass::reverse_update(string str,int p){
 	char cstr[str.size() +1];
 	strcpy(cstr,str.c_str());
 	char *token = strtok(cstr, " ");
@@ -1183,7 +1192,7 @@ void Boardclass::reverse_update(string str){
 		r = (atoi(token));
 		token = strtok(NULL, " ");
 		s = (atoi(token));
-		convtodav(r,s,arr);
+		convtodavid(r,s,arr);
 		int x = arr[0];
 		int y = arr[1];
 		if(p!=1){
@@ -2086,4 +2095,183 @@ void Boardclass::reverse_update(string str){
 			}				
 		}
 	}
+}
+
+
+vector<int> Boardclass::find_row(int p){
+
+	int x1,y1;
+	int count = 0;
+	vector<int> vec;
+	for(int i=-5;i<=5;i++){
+		for(int j=-5;j<=5;j++){
+			if(board[i+5][j+5]==p){
+				if(count==0){
+					x1 = i;
+					y1 = j;
+					count++;
+				}
+				else{
+					count++;
+				}
+			}
+			else{
+				if(count==5){
+					//int a[4] = {x1,y1,x1,j-1};
+					vec.push_back(x1);
+					vec.push_back(y1);
+					vec.push_back(x1);
+					vec.push_back(j-1);
+					count=0;
+				}
+				else if(count > 5){
+					int a[4] = {x1,y1,x1,y1+4};
+					vec.push_back(x1);
+					vec.push_back(y1);
+					vec.push_back(x1);
+					vec.push_back(y1 + 4);
+					int b[4] = {x1,j-5,x1,j-1};
+					vec.push_back(x1);
+					vec.push_back(j-5);
+					vec.push_back(x1);
+					vec.push_back(j-1);
+					count = 0;
+				}
+				count = 0;
+			}
+		}
+		count = 0;
+	}
+	count = 0;
+	for(int j=-5;j<=5;j++){
+		for(int i=-5;i<=5;i++){
+			if(board[i+5][j+5]==p){
+				if(count==0){
+					x1 = i;
+					y1 = j;
+					count++;
+				}
+				else{
+					count++;
+				}
+			}
+			else{
+				if(count==5){
+					int a[4] = {x1,y1,i-1,y1};
+					vec.push_back(x1);
+					vec.push_back(y1);
+					vec.push_back(i-1);
+					vec.push_back(y1);
+					count=0;
+				}
+				else if(count > 5){
+					int a[4] = {x1,y1,x1+4,y1};
+					vec.push_back(x1);
+					vec.push_back(y1);
+					vec.push_back(x1+4);
+					vec.push_back(y1);
+					int b[4] = {i-5,y1,i-1,y1};
+					vec.push_back(i-5);
+					vec.push_back(y1);
+					vec.push_back(i-1);
+					vec.push_back(y1);
+					count = 0;
+				}
+				count = 0;
+			}
+		}
+		count = 0;
+	}
+	count=0;
+	int i = -5;
+	int z,j;
+	for(int z=-5;z<=5;z++){
+		j = z;
+		while(i<=5 && j<=5){
+			if(board[i+5][j+5]==p){
+				if(count==0){
+					x1 = i;
+					y1 = j;
+					count++;
+				}
+				else{
+					count++;
+				}
+			}
+			else{
+				if(count==5){
+					int a[4] ={x1,y1,i-1,j-1};
+					vec.push_back(x1);
+					vec.push_back(y1);
+					vec.push_back(i-1);
+					vec.push_back(j-1);
+					count=0;
+				}
+				else if(count > 5){
+					int a[4] = {x1,y1,x1+4,y1+4};
+					vec.push_back(x1);
+					vec.push_back(y1);
+					vec.push_back(x1+4);
+					vec.push_back(y1+4);
+					int b[4] = {i-5,j-5,i-1,j-1};
+					vec.push_back(i-5);
+					vec.push_back(j-5);
+					vec.push_back(i-1);
+					vec.push_back(j-1);
+					count = 0;
+				}
+				count = 0;
+			}
+			i++;
+			j++;			
+		}
+		i = -5;
+		count = 0;
+	}
+	count = 0;
+	j = -5;
+	for(int z=-4;z<=5;z++){
+		i = z;
+		while(i<=5 && j<=5){
+			if(board[i+5][j+5]==p){
+				if(count==0){
+					x1 = i;
+					y1 = j;
+					count++;
+				}
+				else{
+					count++;
+				}
+			}
+			else{
+				if(count==5){
+					int a[4] = {x1,y1,i-1,j-1};
+					vec.push_back(x1);
+					vec.push_back(y1);
+					vec.push_back(i-1);
+					vec.push_back(j-1);
+					count=0;
+				}
+				else if(count > 5){
+					int a[4] = {x1,y1,x1+4,y1+4};
+					vec.push_back(x1);
+					vec.push_back(y1);
+					vec.push_back(x1+4);
+					vec.push_back(y1+4);
+					int b[4] = {i-5,j-5,i-1,j-1};
+					vec.push_back(i-5);
+					vec.push_back(j-5);
+					vec.push_back(i-1);
+					vec.push_back(j-1);
+					count = 0;
+				}
+				count = 0;
+			}
+			i++;
+			j++;			
+		}
+		j = -5;
+		count = 0;
+	}
+	return vec;
 }
