@@ -616,12 +616,34 @@ void successor(Boardclass& b, Node*& n, int p){
 double calculateHeuristic(Node*& n){
 	return 0;
 }
+
+// double markerHeuristic(Node*& n){
+
+// }
+
+// double ringHeuristic(Node*& n){
+
+// }
+
+// double deltaScore(Node*& n){
+
+// }
+
+// double calculateHeuristic(Node*& n) {
+
+// }
+
+//makes the tree with all heuristic value assigned.
+// INCORPORATE ALPHA BETA PRUNING IN THIS :)
+
 void createTree ( Node*& n, int depth, int max_depth, int p, Boardclass& b ) {
 
     if (depth > max_depth) {return;}
     if (depth == max_depth) {
+		n->visited = true;
         n->h = calculateHeuristic(n);
     }
+	// cout << "value of p is : " << p << endl;
 
     if ( depth < max_depth ){
         double parent_heuristic;
@@ -631,6 +653,7 @@ void createTree ( Node*& n, int depth, int max_depth, int p, Boardclass& b ) {
         else{
         	parent_heuristic = -DBL_MAX;
         }
+		n->visited = true;
         successor(b, n, p);
         for ( int i = 0; i < n->children.size(); i++ ){
             b.update_board( n->children[i]->move, p );
@@ -650,11 +673,77 @@ void createTree ( Node*& n, int depth, int max_depth, int p, Boardclass& b ) {
                 else {continue;}
             }
             b.reverse_update( n->children[i]->move, p );
-
         }
     }
+}
+
+//return the path thorugh minimax algorithm assuming node ordering.
+vector<Node> killerMovePath( Node*& n, int depth, int max_depth, int p, Boardclass& b){
+	vector<Node> killerMove;
+	killerMove.push_back(*n);
+	Node* loop_node = new Node(p);
+	loop_node = n;
+	// Node*& loop_node = Node(p);
+	while (depth < max_depth){
+		successor(b, loop_node, p);
+		for (int i = 0; i < loop_node->children.size(); i++){
+			if (loop_node->children.at(i)->h == loop_node->h) {
+				loop_node = loop_node->children.at(i);
+				killerMove.push_back(*loop_node);
+				break;
+				// Discounts the possibility when two children give the same heuristic.
+				// Assumed node ordering.
+				// If there is node ordering, there is no need for checking any other children whatsoever. 
+			}
+			else {continue;}
+		}
+		depth ++;
+	}
+	return killerMove;
 
 }
+
+// // Alpha Beta pruning assuming node ordering.
+// Node[]* minimaxWithPruning ( Node*& n, int depth, int max_depth, int p, Boardclass& b, int alpha, int beta ){
+// 	// if (depth > max_depth) {
+// 	// 	cerr << "Error : Depth exceeds maximum depth." << endl;
+// 	// }
+// 	// if (depth == max_depth) {
+// 	// 	return calculateHeuristic(n);
+// 	// }
+
+// 	//INCORPORATE IN CREATE TREE>
+
+// }
+
+// double maxValue ( Node*& n, int depth, int max_depth, int p, Boardclass& b, int alpha, int beta ){
+// 	if (depth == max_depth) {
+// 		return n->h ;
+// 	}
+// 	double v = -DBL_MAX;
+// 	successor(b,n, p);
+// 	for ( int i = 0; i < n->children.size(); i++ ){
+// 		v = max(v,minValue( n->children.at(i), depth + 1, max_depth, (p%2) + 1, b, alpha, beta ));
+// 		if ( v >= beta ){return v;}
+// 		alpha = max(alpha,v); 
+// 	}
+// 	return v;
+// }
+
+// double minValue ( Node*& n, int depth, int max_depth, int p, Boardclass& b, int alpha, int beta ){
+// 	if (depth == max_depth) {
+// 		return n->h ;
+// 	}
+// 	double v = DBL_MAX;
+// 	successor(b,n, p);
+// 	for ( int i = 0; i < n->children.size(); i++ ){
+// 		v = min(v,maxValue( n->children.at(i), depth + 1, max_depth, (p%2) + 1, b, alpha, beta ));
+// 		if ( v <= alpha ){return v;}
+// 		beta = min(beta,v); 
+// 	}
+// 	return v;
+// }
+
 
 
 int main(){
@@ -677,7 +766,9 @@ int main(){
 	// 		cout<<board[i][j]<<" ";
 	// 	cout<<"\n";
 	// }
+
 	Boardclass main_board;
+
 	// main_board.board[2][3] = 2;
 	// main_board.my_ringsonboard = 3;
 	// Boardclass main_board2;
@@ -713,5 +804,7 @@ int main(){
 	}	
 
 
+
+	return 0;
 
 }
