@@ -92,41 +92,41 @@ void Boardclass::convtodavid(int a,int b,int *arr){
 	arr[1] = b;
 	//assuming a is the x - coordinate 
 	//assuming b is the y - coordinate 
-	if ( b >= 0 && b <= a-1 ) {
-		arr[0] = b;
-		arr[1] = a;
-		return;
-	}
+	// if ( b >= 0 && b <= a-1 ) {
+	// 	arr[0] = b;
+	// 	arr[1] = a;
+	// 	return;
+	// }
 
-	if ( b >= a && b <= 2*a - 1 ){
-		arr[0] = a;
-		arr[1] = 2*a - b;
-		return;
-	}
+	// if ( b >= a && b <= 2*a - 1 ){
+	// 	arr[0] = a;
+	// 	arr[1] = 2*a - b;
+	// 	return;
+	// }
 
-	if ( b >= 2*a && b <= 3*a - 1 ){
-		arr[0] = 3*a - b;
-		arr[1] = 2*a - b;
-		return;
-	}
+	// if ( b >= 2*a && b <= 3*a - 1 ){
+	// 	arr[0] = 3*a - b;
+	// 	arr[1] = 2*a - b;
+	// 	return;
+	// }
 
-	if ( b >= 3*a && b <= 4*a - 1 ){
-		arr[0] = 3*a - b;
-		arr[1] = -a;
-		return;
-	}
+	// if ( b >= 3*a && b <= 4*a - 1 ){
+	// 	arr[0] = 3*a - b;
+	// 	arr[1] = -a;
+	// 	return;
+	// }
 
-	if ( b >= 4*a && b <= 5*a - 1 ){
-		arr[0] = -a;
-		arr[1] = b - 5*a;
-		return;
-	}
+	// if ( b >= 4*a && b <= 5*a - 1 ){
+	// 	arr[0] = -a;
+	// 	arr[1] = b - 5*a;
+	// 	return;
+	// }
 
-	if ( b >= 5*a && b <= 6*a - 1 ){
-		arr[0] = b - 6*a;
-		arr[1] = b - 5*a;
-		return;
-	}
+	// if ( b >= 5*a && b <= 6*a - 1 ){
+	// 	arr[0] = b - 6*a;
+	// 	arr[1] = b - 5*a;
+	// 	return;
+	// }
 
 }
 
@@ -137,7 +137,6 @@ void Boardclass::convtorad(int a,int b,int *arr){
 	//assuming a is the x - coordinate 
 	//assuming b is the y - coordinate 
 
-<<<<<<< HEAD
 	// if ( a * b > 0) {
 	// 	arr[0] = max(abs(a),abs(b));
 	// }
@@ -175,45 +174,7 @@ void Boardclass::convtorad(int a,int b,int *arr){
 	// 		return;
 	// 	}
 	// }
-=======
-	if ( a * b > 0) {
-		arr[0] = max(abs(a),abs(b));
-	}
-	else {
-		arr[0] = abs(a) + abs(b);
-	}
-	
-	if ( b == arr[0] ) {
-		arr[1] = a;
-		return;
-	}
-	
-	if ( a == arr[0] ) {
-		arr[1] =  2 * arr[0] - b; 
-		return;
-	}
 
-	if ( b == -1 * arr[0] ) {
-		arr[1] = 3 * arr[0] - a ;
-		return;
-	}
-
-	if ( a == -1 * arr[0] ){
-		arr[1] =  5 * arr[0] + a;
-		return;
-	}
-
-	if ( a * b < 0 ){
-		if ( a > 0 ){
-			arr[1] = 2 * arr[0] - b;
-			return;
-		}
-		if ( b > 0 ){
-			arr[1] = 6 * arr[0] + a;
-			return;
-		}
-	}
->>>>>>> fd68680be3aa58692d240e012493df23bb80151f
 
 }
 
@@ -2171,12 +2132,12 @@ vector<int> Boardclass::find_row(int p){
 					count=0;
 				}
 				else if(count > 5){
-					int a[4] = {x1,y1,x1,y1+4};
+					// int a[4] = {x1,y1,x1,y1+4};
 					vec.push_back(x1);
 					vec.push_back(y1);
 					vec.push_back(x1);
 					vec.push_back(y1 + 4);
-					int b[4] = {x1,j-5,x1,j-1};
+					// int b[4] = {x1,j-5,x1,j-1};
 					vec.push_back(x1);
 					vec.push_back(j-5);
 					vec.push_back(x1);
@@ -2203,7 +2164,7 @@ vector<int> Boardclass::find_row(int p){
 			}
 			else{
 				if(count==5){
-					int a[4] = {x1,y1,i-1,y1};
+					// int a[4] = {x1,y1,i-1,y1};
 					vec.push_back(x1);
 					vec.push_back(y1);
 					vec.push_back(i-1);
@@ -2211,12 +2172,12 @@ vector<int> Boardclass::find_row(int p){
 					count=0;
 				}
 				else if(count > 5){
-					int a[4] = {x1,y1,x1+4,y1};
+					// int a[4] = {x1,y1,x1+4,y1};
 					vec.push_back(x1);
 					vec.push_back(y1);
 					vec.push_back(x1+4);
 					vec.push_back(y1);
-					int b[4] = {i-5,y1,i-1,y1};
+					// int b[4] = {i-5,y1,i-1,y1};
 					vec.push_back(i-5);
 					vec.push_back(y1);
 					vec.push_back(i-1);
@@ -2246,7 +2207,7 @@ vector<int> Boardclass::find_row(int p){
 			}
 			else{
 				if(count==5){
-					int a[4] ={x1,y1,i-1,j-1};
+					// int a[4] ={x1,y1,i-1,j-1};
 					vec.push_back(x1);
 					vec.push_back(y1);
 					vec.push_back(i-1);
@@ -2254,12 +2215,12 @@ vector<int> Boardclass::find_row(int p){
 					count=0;
 				}
 				else if(count > 5){
-					int a[4] = {x1,y1,x1+4,y1+4};
+					// int a[4] = {x1,y1,x1+4,y1+4};
 					vec.push_back(x1);
 					vec.push_back(y1);
 					vec.push_back(x1+4);
 					vec.push_back(y1+4);
-					int b[4] = {i-5,j-5,i-1,j-1};
+					// int b[4] = {i-5,j-5,i-1,j-1};
 					vec.push_back(i-5);
 					vec.push_back(j-5);
 					vec.push_back(i-1);
@@ -2299,12 +2260,12 @@ vector<int> Boardclass::find_row(int p){
 					count=0;
 				}
 				else if(count > 5){
-					int a[4] = {x1,y1,x1+4,y1+4};
+					// int a[4] = {x1,y1,x1+4,y1+4};
 					vec.push_back(x1);
 					vec.push_back(y1);
 					vec.push_back(x1+4);
 					vec.push_back(y1+4);
-					int b[4] = {i-5,j-5,i-1,j-1};
+					// int b[4] = {i-5,j-5,i-1,j-1};
 					vec.push_back(i-5);
 					vec.push_back(j-5);
 					vec.push_back(i-1);
