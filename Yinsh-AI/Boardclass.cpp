@@ -90,8 +90,8 @@ void Boardclass::convtodavid(int a,int b,int *arr){
 	//convert radial to david coordinates
 	arr[0] = a;
 	arr[1] = b;
-	//assuming a is the x - coordinate 
-	//assuming b is the y - coordinate 
+	// assuming a is the x - coordinate 
+	// assuming b is the y - coordinate 
 	// if ( b >= 0 && b <= a-1 ) {
 	// 	arr[0] = b;
 	// 	arr[1] = a;
@@ -1279,7 +1279,12 @@ void Boardclass::reverse_update(string str,int p){
 				}
 				else{
 					while(b<y2){
-						board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						if(board[a+5][b+5] == 0){
+							board[a+5][b+5] = 0;
+						}
+						else{
+							board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						}
 						b++;
 					}
 					if(p!=1){
@@ -1319,7 +1324,12 @@ void Boardclass::reverse_update(string str,int p){
 				}
 				else{
 					while(b>y2){
-						board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						if(board[a+5][b+5] == 0){
+							board[a+5][b+5] = 0;
+						}
+						else{
+							board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						}
 						b--;
 					}
 					if(p!=1){
@@ -1361,7 +1371,12 @@ void Boardclass::reverse_update(string str,int p){
 				}
 				else{
 					while(a<x2){
-						board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						if(board[a+5][b+5] == 0){
+							board[a+5][b+5] = 0;
+						}
+						else{
+							board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						}
 						a++;
 					}
 					if(p!=1){
@@ -1401,7 +1416,12 @@ void Boardclass::reverse_update(string str,int p){
 				}
 				else{
 					while(a>x2){
-						board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						if(board[a+5][b+5] == 0){
+							board[a+5][b+5] = 0;
+						}
+						else{
+							board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						}
 						a--;
 					}
 					if(p!=1){
@@ -1445,7 +1465,12 @@ void Boardclass::reverse_update(string str,int p){
 				}
 				else{
 					while(b<y2){
-						board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						if(board[a+5][b+5] == 0){
+							board[a+5][b+5] = 0;
+						}
+						else{
+							board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						}
 						b++;
 						a++;
 					}
@@ -1488,7 +1513,12 @@ void Boardclass::reverse_update(string str,int p){
 				}
 				else{
 					while(b>y2){
-						board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						if(board[a+5][b+5] == 0){
+							board[a+5][b+5] = 0;
+						}
+						else{
+							board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						}
 						b--;
 						a--;
 					}
@@ -1770,7 +1800,12 @@ void Boardclass::reverse_update(string str,int p){
 					}
 					else{
 						while(b<y2){
+						if(board[a+5][b+5] == 0){
+							board[a+5][b+5] = 0;
+						}
+						else{
 							board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						}
 							b++;
 						}
 						if(p!=1){
@@ -1810,7 +1845,12 @@ void Boardclass::reverse_update(string str,int p){
 					}
 					else{
 						while(b>y2){
+						if(board[a+5][b+5] == 0){
+							board[a+5][b+5] = 0;
+						}
+						else{
 							board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						}
 							b--;
 						}
 						if(p!=1){
@@ -1852,7 +1892,12 @@ void Boardclass::reverse_update(string str,int p){
 					}
 					else{
 						while(a<x2){
+						if(board[a+5][b+5] == 0){
+							board[a+5][b+5] = 0;
+						}
+						else{
 							board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						}
 							a++;
 						}
 						if(p!=1){
@@ -1892,7 +1937,12 @@ void Boardclass::reverse_update(string str,int p){
 					}
 					else{
 						while(a>x2){
+						if(board[a+5][b+5] == 0){
+							board[a+5][b+5] = 0;
+						}
+						else{
 							board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						}
 							a--;
 						}
 						if(p!=1){
@@ -1936,7 +1986,12 @@ void Boardclass::reverse_update(string str,int p){
 					}
 					else{
 						while(b<y2){
+						if(board[a+5][b+5] == 0){
+							board[a+5][b+5] = 0;
+						}
+						else{
 							board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						}
 							b++;
 							a++;
 						}
@@ -1979,7 +2034,12 @@ void Boardclass::reverse_update(string str,int p){
 					}
 					else{
 						while(b>y2){
+						if(board[a+5][b+5] == 0){
+							board[a+5][b+5] = 0;
+						}
+						else{
 							board[a+5][b+5] = (board[a+5][b+5] % 2) + 1;
+						}
 							b--;
 							a--;
 						}

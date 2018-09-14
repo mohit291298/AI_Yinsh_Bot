@@ -11,7 +11,7 @@ using namespace std;
 Node::Node(int p1){
 	//state.copy_board(b);
 	//num_child = 0;
-	move = "";
+	//move = "";
 	visited = 0;
 	p = p1;
 	h = 0;
