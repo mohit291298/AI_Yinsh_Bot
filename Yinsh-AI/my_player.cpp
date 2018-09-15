@@ -50,42 +50,43 @@ string convtorad(int a,int b){
 	// assuming a is the x - coordinate 
 	// assuming b is the y - coordinate 
 
-	// if ( a * b > 0) {
-	// 	arr[0] = max(abs(a),abs(b));
-	// }
-	// else {
-	// 	arr[0] = abs(a) + abs(b);
-	// }
+	if ( a * b >= 0) {
+		arr[0] = max(abs(a),abs(b));
+	}
+	else {
+		arr[0] = abs(a) + abs(b);
+	}
 	
-	// if ( b == arr[0] ) {
-	// 	arr[1] = a;
-	// 	//return;
-	// }
+	if ( b == arr[0] ) {
+		arr[1] = a;
+		//return;
+	}
 	
-	// else if ( a == arr[0] ) {
-	// 	arr[1] =  2 * arr[0] - b; 
-	// }
+	else if ( a == arr[0] ) {
+		arr[1] =  2 * arr[0] - b; 
+		//return;
+	}
 
-	// else if ( b == -1 * arr[0] ) {
-	// 	arr[1] = 3 * arr[0] - a ;
-	// 	//return;
-	// }
+	else if ( b == -1 * arr[0] ) {
+		arr[1] = 3 * arr[0] - a ;
+		//return;
+	}
 
-	// if ( a == -1 * arr[0] ){
-	// 	arr[1] =  5 * arr[0] + a;
-	// 	//return;
-	// }
+	else if ( a == -1 * arr[0] ){
+		arr[1] =  5 * arr[0] + b;
+		//return;
+	}
 
-	// else if ( a * b < 0 ){
-	// 	if ( a > 0 ){
-	// 		arr[1] = 2 * arr[0] - b;
-	// 		//return;
-	// 	}
-	// 	else if ( b > 0 ){
-	// 		arr[1] = 6 * arr[0] + a;
-	// 		//return;
-	// 	}
-	// }
+	else if ( a * b <= 0 ){
+		if ( a > 0 ){
+			arr[1] = 2 * arr[0] - b;
+			//return;
+		}
+		else if ( b > 0 ){
+			arr[1] = 6 * arr[0] + a;
+			//return;
+		}
+	}
 	ostringstream str1,str2;
 	str1 << arr[0];
 	str2 <<arr[1];
@@ -424,6 +425,7 @@ void successor(Boardclass& b, Node*& n, int p){
 								str1 = strlist[k] + (" S "+ ring_rad +" M " + convtorad(x1,y1));
 								blist[k].update_board(str1,p);
 							temp_row = blist[k].find_row(p);
+							//cout<<temp_row.size()<<"\n";
 							extend_after_S(n,blist[k],temp_row,p,str1);
 								blist[k].reverse_update(str1,p);					
 
@@ -757,6 +759,9 @@ int main(){
 	// cout<<main_board2.board[2][3]<<"\n";
 	// cout<<main_board2.my_ringsonboard<<"\n";
 	player++;
+	cerr<<player<<"\n";
+	cerr<<n<<"\n";
+	cerr<<time_left<<"\n";
 	// cout<<player;
 	// cout<<convtorad(-2,0)<<"\n";
 	// int arrr[2];
@@ -765,6 +770,7 @@ int main(){
 	
 	if(player==2){
 		getline(cin, str);
+		cerr<<str<<"\n";
 		main_board.update_board(str,2);
 	}
 	for(int i=0;i<=4;i++){
@@ -782,13 +788,14 @@ int main(){
 			j = (rand()%10-5);
 			k = (rand()%10) - 5;;
 		}
-		cout<<m;
-		cout<<"\n";
-		for(int i1=0;i1<11;i1++){
-			for(int j1=0;j1<11;j1++)
-				cout<<main_board.board[i1][j1]<<" ";
-			cout<<"\n";
-		}
+		cout<<m<<"\n";
+		cerr<<m<<"\n";
+		// cout<<"\n";
+		// for(int i1=0;i1<11;i1++){
+		// 	for(int j1=0;j1<11;j1++)
+		// 		cout<<main_board.board[i1][j1]<<" ";
+		// 	cout<<"\n";
+		// }
 		if(!(player==2 && i==4)){
 			getline(cin, str);
 			// cout<<"Okay "<<main_board.my_ringsonboard<<" "<<main_board.opp_ringsonboard<<"\n";
@@ -819,7 +826,7 @@ int main(){
 		Node* nod_pointer = new Node(1);
 		createTree ( nod_pointer, 0, 2, 1, main_board);
 		main_board.update_board(nod_pointer->children[0]->move,1);
-		cout<<nod_pointer->children[0]->move;
+		cout<<nod_pointer->children[0]->move<<"\n";
 
 		cout<<"\n";
 		for(int i=0;i<11;i++){
@@ -829,6 +836,12 @@ int main(){
 		}
 		getline(cin, str);
 		main_board.update_board(str,2);
+		cout<<"\n";
+		for(int i=0;i<11;i++){
+			for(int j=0;j<11;j++)
+				cout<<main_board.board[i][j]<<" ";
+			cout<<"\n";
+		}
 
 	}	
 

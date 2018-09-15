@@ -108,7 +108,7 @@ class Client(Communicator):
 			print 'ERROR : FAILED TO SEND DATA TO SERVER'
 			super(Client,self).closeSocket()
 		elif((data['action'] == 'KILLPROC') or (data['action'] == 'FINISH')):
-			time.sleep(60000)
+			time.sleep(60000000)
 			super(Client,self).closeSocket()
 		return success_flag
 
@@ -136,6 +136,7 @@ class Client(Communicator):
 					retData = data['data']                  
 			elif(data['action'] == 'KILLPROC'):
 					print 'ERROR : ' + data['meta'] + ' ,ON OTHER CLIENT'
+					time.sleep(60000000)
 					super(Client,self).closeChildProcess()
 					super(Client,self).closeSocket()                                
 			elif(data['action'] == 'FINISH'):
