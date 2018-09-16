@@ -230,7 +230,6 @@ void Boardclass::update_board(string str,int p){
 	char cstr[str.size() +1];
 	strcpy(cstr,str.c_str());
 	char *token = strtok(cstr, " ");
-	
 	int arr[2];
 	int r,s;
 	if(token[0]=='P'){
@@ -682,16 +681,20 @@ void Boardclass::update_board(string str,int p){
 	}
 	else if(token[0] == 'R' && token[1]=='S')
 	{
-		// cout<<"in correct loop\n";
+//		 cout<<"in correct loop\n";
+
 		while(token != NULL){
 			token = strtok(NULL, " ");
+//			cout<<token<<"\n";
 			r = (atoi(token));
 			token = strtok(NULL, " ");
+//			cout<<token<<"\n";
+
 			s = (atoi(token));
 			convtodavid(r,s,arr);
 			int a1 = arr[0];
 			int b1 = arr[1];
-			// cout<<a1<<" "<<b1<<"\n";
+//			 cout<<a1<<" "<<b1<<"\n";
 			token = strtok(NULL, " "); //this is M
 
 			token = strtok(NULL, " ");
@@ -701,7 +704,7 @@ void Boardclass::update_board(string str,int p){
 			convtodavid(r,s,arr);
 			int a2 = arr[0];
 			int b2 = arr[1];
-			// cout<<a2<<" "<<b2<<"\n";
+//			cout<<a2<<" "<<b2<<"\n";
 			token = strtok(NULL, " "); //this is M
 
 			token = strtok(NULL, " ");
