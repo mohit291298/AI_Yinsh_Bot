@@ -788,18 +788,141 @@ void successor(Boardclass& b, Node*& n, int p){
 }
 
 double calculateHeuristic(Boardclass& b,int *opp_rings_x,int *opp_rings_y,int *my_rings_x,int *my_rings_y,int &num_opp,int &num_my){
+//	cerr<<"compute heuristic started\n";
 	double h;
 	double my_marker =0.0;
 	double opp_marker = 0.0;
-	h = 1000*(5 - num_my) - 1000*(5 - num_opp);
-	for (int i = 0; i < 11; i++){
-		for (int j = 0; j < 11; j++){
-			if (b.board[i][j] == 1) { my_marker = my_marker + 1;}
-			if (b.board[i][j] == 2) {opp_marker = opp_marker + 1;}
+	h = 1024*(5 - num_my) - 1000*(5 - num_opp);
+	int count =0;
+	for (int i = -5; i <=5; i++){
+		for (int j = -5; j <=5; j++){
+			if (b.board[i+5][j+5] == 1) { my_marker = my_marker + 1;}
+			if(b.board[i+5][j+5]==2){
+				count++;
+				// opp_marker = opp_marker + 1;
+			}
+			else{
+				if(count==0){
+
+				}
+				else if(count <= 3)
+					h = h - pow(4,count);
+				else if(count>3)
+					h = h - 512;
+				count = 0;
+			}
 		}
+		if(count==0){
+
+		}
+		else if(count <= 3)
+			h = h - pow(4,count);
+		else if(count>3)
+			h = h - 512;
+		count = 0;
 	}
-	h = h + 100*(my_marker - opp_marker);
+//	cerr<<"compute heuristic started\n";
+
+	count = 0;	
+	for (int j = -5; j <=5; j++){
+		for (int i = -5; i <=5; i++){
+			// if (b.board[i+5][j+5] == 1) { my_marker = my_marker + 1;}
+			if(b.board[i+5][j+5]==2){
+				count++;
+				// opp_marker = opp_marker + 1;
+			}
+			else{
+				if(count==0){
+
+				}
+				else if(count <= 3)
+					h = h - pow(4,count);
+				else if(count>3)
+					h = h - 512;
+				count = 0;
+			}
+		}
+		if(count==0){
+
+		}
+		else if(count <= 3)
+			h = h - pow(4,count);
+		else if(count>3)
+			h = h - 512;
+		count = 0;		
+	}
+//	cerr<<"compute heuristic started\n";
+
+	count =0;
+	int i = -5;
+	int j;
+	for(int z=-5;z<=5;z++){
+		j = z;
+		while(i<=5 && j<=5){
+			if(b.board[i+5][j+5]==2){
+				count++;
+			}
+			else{
+				if(count==0){
+
+				}
+				else if(count <= 3)
+					h = h - pow(4,count);
+				else if(count>3)
+					h = h - 512;
+				count = 0;				
+			}
+		i++;
+		j++;						
+		}
+		if(count==0){
+
+		}
+		else if(count <= 3)
+			h = h - pow(4,count);
+		else if(count>3)
+			h = h - 512;
+		count = 0;
+		i = -5;		
+	}
+//	cerr<<"compute heuristic started\n";
+
+	count = 0;
+	j = -5;
+	for(int z=-4;z<=5;z++){
+		i = z;
+		while(i<=5 && j<=5){
+//			cerr<<"compute heuristic started\n";
+			if(b.board[i+5][j+5]==2){
+				count++;
+			}
+			else{
+				if(count==0){
+
+				}
+				else if(count <= 3)
+					h = h - pow(4,count);
+				else if(count>3)
+					h = h - 512;
+				count = 0;				
+			}
+			i++;
+			j++;			
+		}
+		if(count==0){
+
+		}
+		else if(count <= 3)
+			h = h - pow(4,count);
+		else if(count>3)
+			h = h - 512;
+		count = 0;				
+		j = -5;
+	}
+
+	h = h + 20*(my_marker);
 	// cout<<h<<"\n";
+//	cerr<<"heuristic ends\n";
 	return h;
 }
 void createTree ( Node*& n, int depth, int max_depth, int p, Boardclass& b,double alpha,double beta) {
@@ -807,7 +930,7 @@ void createTree ( Node*& n, int depth, int max_depth, int p, Boardclass& b,doubl
     // cout<<"in create tree\n";
 	int opp_rings_x[5],opp_rings_y[5],my_rings_x[5],my_rings_y[5];
 	int num_opp,num_my;
-
+//	cerr<<"create tree started\n";
 	b.find_rings(opp_rings_x,opp_rings_y,my_rings_x,my_rings_y,num_opp,num_my);
 
     if (depth > max_depth) {return;}
@@ -863,6 +986,7 @@ void createTree ( Node*& n, int depth, int max_depth, int p, Boardclass& b,doubl
         }
         n->h = parent_heuristic;
     }
+//    cerr<<"in create tree\n";
 
 }
 
@@ -965,10 +1089,30 @@ int main(){
 	}
 		// cout<<"In main\n";
 	// Boardclass tempb;
+	int i;
+	// 	Node* nod_pointer = new Node(1);
+	// int move = 0;
+	// int flag;
 	while(1){
+		// flag =0;
+		// if(move == 1){
+		// 	for(int j=0;j<nod_pointer->children[i].size();j++){
+		// 		if(nod_pointer->children[i]->children[j]->move.compare(str)==0){
+		// 			nod_pointer = nod_pointer->children[i]->children[j];
+		// 			flag = 1;
+		// 		}
+		// 	}
+		// 	if(flag==0){
+		// 		nod_pointer->children.clear();
+		// 		nod_pointer->visited = 0;
+		// 	}
+		// }
+		// move =1;
+		// createTree ( nod_pointer, 0, 4, 1, main_board,-10000,10000);
 
 		//cout<<"your move";//code it
 		Node* nod_pointer = new Node(1);
+
 		createTree ( nod_pointer, 0, 3, 1, main_board,-10000,10000);
 		// cout<<"after create tree\n";
 		// cout<<"\n";
@@ -981,10 +1125,10 @@ int main(){
 		// 	cout<<"\n";
 		// }
 		// cerr<<nod_pointer->children.size()<<"\n";
-		for(int i =0;i<nod_pointer->children.size();i++){
-			if(nod_pointer->h == nod_pointer->children[i]->h){
-				cout<<nod_pointer->children[0]->move<<"\n";
-				main_board.update_board(nod_pointer->children[0]->move,1);
+		for(i =0;i<nod_pointer->children.size();i++){
+			if((abs(nod_pointer->h - nod_pointer->children[i]->h))<=1){
+				cout<<nod_pointer->children[i]->move<<"\n";
+				main_board.update_board(nod_pointer->children[i]->move,1);
 				break;				
 			}
 		}		
@@ -1004,7 +1148,7 @@ int main(){
 		// for(int i=0;i<main_board.opp_ringsonboard;i++){
 		// 	cout<<main_board.opp_rings_x[i]<<" "<<main_board.opp_rings_y[i]<<"\n";
 		// }
-
+		cerr<<"waiting\n";
 		getline(cin, str);
 		// if(str.length()==3)
 		// 	return 0;
@@ -1019,7 +1163,6 @@ int main(){
 		// 	cout<<"\n";
 		// }
 		// tempb.copy_board(main_board);
-
 	}	
 
 	// int bo[11][11]= {
