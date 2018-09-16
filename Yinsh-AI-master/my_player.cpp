@@ -130,7 +130,7 @@ void rsre(Boardclass& b,int a1,int b1,int a2,int b2,int color){
 				p1--;
 			}					
 		}
-		b.board[a2+5][b2+5]=0;
+		b.board[a2+5][b2+5]=color;
 	}
 	else{
 		if(b2>b1){
@@ -147,7 +147,7 @@ void rsre(Boardclass& b,int a1,int b1,int a2,int b2,int color){
 				p1--;
 			}					
 		}
-		b.board[a2+5][b2+5]=0;
+		b.board[a2+5][b2+5]=color;
 	}
 
 }
