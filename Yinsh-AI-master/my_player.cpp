@@ -398,7 +398,7 @@ void successor(Boardclass& b, Node*& n, int p){
 		// cout<<strlist.size();
 		for(int k=0;k<(strlist.size());k++){
 			//cout<<"-------------------------------------------------------------";
-		b.update_board(strlist[k],p);
+			b.update_board(strlist[k],p);
 		// cout<<"after update\n";
 		// cout<<strlist[k]<<"\n";
 		// cout<<p<<"\n";
@@ -407,7 +407,7 @@ void successor(Boardclass& b, Node*& n, int p){
 			// 		cout<<b.board[i1][j1]<<" ";
 			// 	cout<<"\n";
 			// }		
-		b.find_rings(opp_rings_x,opp_rings_y,my_rings_x,my_rings_y,num_opp,num_my);
+			b.find_rings(opp_rings_x,opp_rings_y,my_rings_x,my_rings_y,num_opp,num_my);
    //          cout<<" RINGS:";
 			// for(int i1=0;i1<num_my;i1++){
 			// 	cout<<my_rings_x[i1]<<" "<<my_rings_y[i1]<<"\n";
@@ -421,7 +421,19 @@ void successor(Boardclass& b, Node*& n, int p){
 				num_rings = num_opp;
 			else
 				num_rings = num_my;
+			
+			if(num_rings<=2){
+				Node* t = new Node((p%2) + 1);
+				//cout<<t->p<<"\n";
+				//t->visited = 1;
+				t->move = strlist[k];
+						// cout<<"Node created\n";
 
+				// cout<<str<<"\n";
+				// n->move = "123";
+				n->children.push_back(t);
+				continue;
+			}
 			for(int i=0;i<num_rings;i++){
 				if(p!=1){
 					x = opp_rings_x[i];
