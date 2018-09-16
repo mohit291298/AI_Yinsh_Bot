@@ -688,33 +688,33 @@ void createTree ( Node*& n, int depth, int max_depth, int p, Boardclass& b ) {
         else{
         	parent_heuristic = -DBL_MAX;
         }
-        Boardclass tempb3;
-        			cout<<"SUCCESSOR BEFORE-------------------------------------------------------------";
-			cout<<"\n";
-			for(int i1=0;i1<11;i1++){
-				for(int j1=0;j1<11;j1++)
-					cout<<b.board[i1][j1]<<" ";
-				cout<<"\n";
-			}
-						tempb3.copy_board(b);
+        // Boardclass tempb3;
+   //      			cout<<"SUCCESSOR BEFORE-------------------------------------------------------------";
+			// cout<<"\n";
+			// for(int i1=0;i1<11;i1++){
+			// 	for(int j1=0;j1<11;j1++)
+			// 		cout<<b.board[i1][j1]<<" ";
+			// 	cout<<"\n";
+			// }
+			// 			tempb3.copy_board(b);
 
         successor(b, n, p);
-        			cout<<"SUCCESSOR AFTER-------------------------------------------------------------";
-			cout<<"\n";
-			for(int i1=0;i1<11;i1++){
-				for(int j1=0;j1<11;j1++)
-					cout<<b.board[i1][j1]<<" ";
-				cout<<"\n";
-			}
-			cout <<"\n";
-			for(int i1=0;i1<11;i1++){
-				for(int j1=0;j1<11;j1++){
-				if(tempb3.board[i1][j1]!=b.board[i1][j1])
-					cout<<"SUCCESSOR ERROR---------------------------------------------\n";					
-					cout<<b.board[i1][j1]<<" ";
-				}
-				cout<<"\n";
-			}
+   //      			cout<<"SUCCESSOR AFTER-------------------------------------------------------------";
+			// cout<<"\n";
+			// for(int i1=0;i1<11;i1++){
+			// 	for(int j1=0;j1<11;j1++)
+			// 		cout<<b.board[i1][j1]<<" ";
+			// 	cout<<"\n";
+			// }
+			// cout <<"\n";
+			// for(int i1=0;i1<11;i1++){
+			// 	for(int j1=0;j1<11;j1++){
+			// 	if(tempb3.board[i1][j1]!=b.board[i1][j1])
+			// 		cout<<"SUCCESSOR ERROR---------------------------------------------\n";					
+			// 		cout<<b.board[i1][j1]<<" ";
+			// 	}
+			// 	cout<<"\n";
+			// }
 
         // cout<<"after successor\n";
         // cout<<n->children.size()<<"\n";
@@ -740,10 +740,10 @@ void createTree ( Node*& n, int depth, int max_depth, int p, Boardclass& b ) {
 			// 		cout<<b.board[i1][j1]<<" ";
 			// 	cout<<"\n";
 			// }
-			tempb.copy_board(b);
+			// tempb.copy_board(b);
 
             b.update_board( n->children[i]->move, p );
-            tempb2.copy_board(b);
+            // tempb2.copy_board(b);
         	// cout<<"after update board\n";
 			// cout<<"AFTER UPDATE\n";
 			// for(int i1=0;i1<11;i1++){
@@ -770,54 +770,54 @@ void createTree ( Node*& n, int depth, int max_depth, int p, Boardclass& b ) {
 			// for(int i1=0;i1<b.opp_ringsonboard;i1++){
 			// 	cout<<b.opp_rings_x[i1]<<" "<<b.opp_rings_y[i1]<<"\n";
 			// }
-			cout<<"AFTER UPDATE\n";
-			for(int i1=0;i1<11;i1++){
-				for(int j1=0;j1<11;j1++)
-					cout<<tempb2.board[i1][j1]<<" ";
-				cout<<"\n";
-			}
-			cout <<"\n";
-			for(int i1=0;i1<11;i1++){
-				for(int j1=0;j1<11;j1++){
-				if(tempb2.board[i1][j1]!=b.board[i1][j1])
-					cout<<"IN CREATE TREE CREATE TREE ERROR---------------------------------------------\n";					
-					cout<<b.board[i1][j1]<<" ";
-				}
-				cout<<"\n";
-			}
-			cout<<"BEFORE REVERSE\n";
-			cout<<n->children[i]->move<<"\n";
-			for(int i1=0;i1<11;i1++){
-				for(int j1=0;j1<11;j1++)
-					cout<<tempb.board[i1][j1]<<" ";
-				cout<<"\n";
-			}
-			cout <<"\n";
-			for(int i1=0;i1<11;i1++){
-				for(int j1=0;j1<11;j1++){
-				if(tempb2.board[i1][j1]!=b.board[i1][j1])
-					cout<<"IN CREATE TREE CREATE TREE ERROR---------------------------------------------\n";					
-					cout<<b.board[i1][j1]<<" ";
-				}
-				cout<<"\n";
-			}
+			// cout<<"AFTER UPDATE\n";
+			// for(int i1=0;i1<11;i1++){
+			// 	for(int j1=0;j1<11;j1++)
+			// 		cout<<tempb2.board[i1][j1]<<" ";
+			// 	cout<<"\n";
+			// }
+			// cout <<"\n";
+			// for(int i1=0;i1<11;i1++){
+			// 	for(int j1=0;j1<11;j1++){
+			// 	if(tempb2.board[i1][j1]!=b.board[i1][j1])
+			// 		cout<<"IN CREATE TREE CREATE TREE ERROR---------------------------------------------\n";					
+			// 		cout<<b.board[i1][j1]<<" ";
+			// 	}
+			// 	cout<<"\n";
+			// }
+			// cout<<"BEFORE REVERSE\n";
+			// cout<<n->children[i]->move<<"\n";
+			// for(int i1=0;i1<11;i1++){
+			// 	for(int j1=0;j1<11;j1++)
+			// 		cout<<tempb.board[i1][j1]<<" ";
+			// 	cout<<"\n";
+			// }
+			// cout <<"\n";
+			// for(int i1=0;i1<11;i1++){
+			// 	for(int j1=0;j1<11;j1++){
+			// 	if(tempb2.board[i1][j1]!=b.board[i1][j1])
+			// 		cout<<"IN CREATE TREE CREATE TREE ERROR---------------------------------------------\n";					
+			// 		cout<<b.board[i1][j1]<<" ";
+			// 	}
+			// 	cout<<"\n";
+			// }
 
             b.reverse_update( n->children[i]->move, p );
-			cout<<"AFTER REVERSE\n";
-			for(int i1=0;i1<11;i1++){
-				for(int j1=0;j1<11;j1++)
-					cout<<b.board[i1][j1]<<" ";
-				cout<<"\n";
-			}
+			// cout<<"AFTER REVERSE\n";
+			// for(int i1=0;i1<11;i1++){
+			// 	for(int j1=0;j1<11;j1++)
+			// 		cout<<b.board[i1][j1]<<" ";
+			// 	cout<<"\n";
+			// }
 
-			for(int i1=0;i1<11;i1++){
-				for(int j1=0;j1<11;j1++){
-				if(tempb.board[i1][j1]!=b.board[i1][j1])
-					cout<<"IN CREATE TREE REVERSE ERROR---------------------------------------------\n";					
-					cout<<b.board[i1][j1]<<" ";
-				}
-				cout<<"\n";
-			}
+			// for(int i1=0;i1<11;i1++){
+			// 	for(int j1=0;j1<11;j1++){
+			// 	if(tempb.board[i1][j1]!=b.board[i1][j1])
+			// 		cout<<"IN CREATE TREE REVERSE ERROR---------------------------------------------\n";					
+			// 		cout<<b.board[i1][j1]<<" ";
+			// 	}
+			// 	cout<<"\n";
+			// }
    //           cout<<" RINGS:";
 			// cout<< b.my_ringsonboard<<" "<< b.opp_ringsonboard<<"\n";
 			// for(int i1=0;i1<b.my_ringsonboard;i1++){
@@ -855,9 +855,9 @@ void createTree ( Node*& n, int depth, int max_depth, int p, Boardclass& b ) {
 
 
 int main(){
-	ifstream in("file.txt");
+	//ifstream in("file.txt");
 	string str;
-	getline(in, str);
+	getline(cin, str);
 	string str2 = trim(str);
 	char cstr[str2.size() +1];
 	strcpy(cstr,str2.c_str());
@@ -901,7 +901,7 @@ int main(){
 	// cout<<arrr[0]<<" "<<arrr[1]<<"\n";
 	
 	if(player==2){
-		getline(in, str);
+		getline(cin, str);
 		cerr<<str<<"\n";
 		main_board.update_board(str,2);
 	}
@@ -929,7 +929,7 @@ int main(){
 		// 	cout<<"\n";
 		// }
 		if(!(player==2 && i==4)){
-			getline(in, str);
+			getline(cin, str);
 			// cout<<"Okay "<<main_board.my_ringsonboard<<" "<<main_board.opp_ringsonboard<<"\n";
 			main_board.update_board(str,2);
 			// cout<<"Okay2 "<<main_board.my_ringsonboard<<" "<<main_board.opp_ringsonboard<<"\n";			
@@ -947,7 +947,7 @@ int main(){
 	// cout<<"In main1\n";
 	
 	if(player == 2){
-		getline(in, str);
+		getline(cin, str);
 		main_board.update_board(str,2);
 	}
 		// cout<<"In main\n";
@@ -957,27 +957,27 @@ int main(){
 		//cout<<"your move";//code it
 		Node* nod_pointer = new Node(1);
 		createTree ( nod_pointer, 0, 2, 1, main_board);
-		cout<<"after create tree\n";
-		cout<<"\n";
-		for(int i=0;i<11;i++){
-			for(int j=0;j<11;j++){
-				cout<<main_board.board[i][j]<<" ";
-				if(tempb.board[i][j]!=main_board.board[i][j])
-					cout<<"ERROR---------------------------------------------\n";
-			}
-			cout<<"\n";
-		}
-		cout<<nod_pointer->children.size()<<"\n";		
+		// cout<<"after create tree\n";
+		// cout<<"\n";
+		// for(int i=0;i<11;i++){
+		// 	for(int j=0;j<11;j++){
+		// 		cout<<main_board.board[i][j]<<" ";
+		// 		if(tempb.board[i][j]!=main_board.board[i][j])
+		// 			cout<<"ERROR---------------------------------------------\n";
+		// 	}
+		// 	cout<<"\n";
+		// }
+		cerr<<nod_pointer->children.size()<<"\n";		
 		cout<<nod_pointer->children[0]->move<<"\n";
 		main_board.update_board(nod_pointer->children[0]->move,1);
-		cout<<nod_pointer->children[0]->move<<"\n";
+		// cout<<nod_pointer->children[0]->move<<"\n";
 
-		cout<<"after update \n";
-		for(int i=0;i<11;i++){
-			for(int j=0;j<11;j++)
-				cout<<main_board.board[i][j]<<" ";
-			cout<<"\n";
-		}
+		// cout<<"after update \n";
+		// for(int i=0;i<11;i++){
+		// 	for(int j=0;j<11;j++)
+		// 		cout<<main_board.board[i][j]<<" ";
+		// 	cout<<"\n";
+		// }
 		// cout<< main_board.my_ringsonboard<<" "<<main_board.opp_ringsonboard<<"\n";
 		// for(int i=0;i<main_board.my_ringsonboard;i++){
 		// 	cout<<main_board.my_rings_x[i]<<" "<<main_board.my_rings_y[i]<<"\n";
@@ -987,17 +987,17 @@ int main(){
 		// 	cout<<main_board.opp_rings_x[i]<<" "<<main_board.opp_rings_y[i]<<"\n";
 		// }
 
-		getline(in, str);
+		getline(cin, str);
 		main_board.update_board(str,2);
 		
-		cout<<"Input chance\n";
-		cout<<str<<"\n";
-		for(int i=0;i<11;i++){
-			for(int j=0;j<11;j++)
-				cout<<main_board.board[i][j]<<" ";
-			cout<<"\n";
-		}
-		tempb.copy_board(main_board);
+		// cout<<"Input chance\n";
+		// cout<<str<<"\n";
+		// for(int i=0;i<11;i++){
+		// 	for(int j=0;j<11;j++)
+		// 		cout<<main_board.board[i][j]<<" ";
+		// 	cout<<"\n";
+		// }
+		// tempb.copy_board(main_board);
 
 	}	
 

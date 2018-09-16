@@ -210,7 +210,7 @@ void Boardclass::find_rings(int *opp_rings_x,int *opp_rings_y,int *my_rings_x,in
 	num_my = 0;
 	num_opp = 0;
 	for(int i=-5;i<=5;i++){
-		for(int j=0;j<=5;j++){
+		for(int j=-5;j<=5;j++){
 			if(board[i+5][j+5]==3){
 				my_rings_x[num_my] = i;
 				my_rings_y[num_my] = j;
