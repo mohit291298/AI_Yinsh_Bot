@@ -1099,8 +1099,8 @@ int main(){
 		// }
 
 		getline(cin, str);
-		if(str.length()==3)
-			return 0;
+		// if(str.length()==3)
+		// 	return 0;
 
 		main_board.update_board(str,2);
 		

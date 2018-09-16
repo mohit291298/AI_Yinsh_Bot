@@ -2685,6 +2685,27 @@ vector<int> Boardclass::find_row(int p){
 				count = 0;
 			}
 		}
+		if(count==5){
+			// int a[4] = {x1,y1,i-1,y1};
+			vec.push_back(x1);
+			vec.push_back(1);
+			vec.push_back(x1);
+			vec.push_back(5);
+			count=0;
+		}
+		else if(count > 5){
+			// int a[4] = {x1,y1,x1+4,y1};
+			vec.push_back(x1);
+			vec.push_back(y1);
+			vec.push_back(x1);
+			vec.push_back(y1+4);
+			// int b[4] = {i-5,y1,i-1,y1};
+			vec.push_back(x1);
+			vec.push_back(1);
+			vec.push_back(x1);
+			vec.push_back(5);
+			count = 0;
+		}		
 		count = 0;
 	}
 	count = 0;
@@ -2725,6 +2746,27 @@ vector<int> Boardclass::find_row(int p){
 				count = 0;
 			}
 		}
+		if(count==5){
+			// int a[4] = {x1,y1,i-1,y1};
+			vec.push_back(1);
+			vec.push_back(y1);
+			vec.push_back(5);
+			vec.push_back(y1);
+			count=0;
+		}
+		else if(count > 5){
+			// int a[4] = {x1,y1,x1+4,y1};
+			vec.push_back(x1);
+			vec.push_back(y1);
+			vec.push_back(x1+4);
+			vec.push_back(y1);
+			// int b[4] = {i-5,y1,i-1,y1};
+			vec.push_back(1);
+			vec.push_back(y1);
+			vec.push_back(5);
+			vec.push_back(y1);
+			count = 0;
+		}		
 		count = 0;
 	}
 	count=0;
@@ -2770,7 +2812,28 @@ vector<int> Boardclass::find_row(int p){
 			i++;
 			j++;			
 		}
-		i = -5;
+		if(count==5){
+			// int a[4] = {x1,y1,i-1,y1};
+			vec.push_back(x1);
+			vec.push_back(y1);
+			vec.push_back(x1+4);
+			vec.push_back(y1+4);
+			count=0;
+		}
+		else if(count > 5){
+			// int a[4] = {x1,y1,x1+4,y1};
+			vec.push_back(x1);
+			vec.push_back(y1);
+			vec.push_back(x1+4);
+			vec.push_back(y1+4);
+			// int b[4] = {i-5,y1,i-1,y1};
+			vec.push_back(i-5);
+			vec.push_back(1);
+			vec.push_back(i-1);
+			vec.push_back(5);
+			count = 0;
+		}
+		i = -5;		
 		count = 0;
 	}
 	count = 0;
@@ -2815,6 +2878,28 @@ vector<int> Boardclass::find_row(int p){
 			i++;
 			j++;			
 		}
+		if(count==5){
+			// int a[4] = {x1,y1,i-1,y1};
+			vec.push_back(x1);
+			vec.push_back(y1);
+			vec.push_back(x1+4);
+			vec.push_back(y1+4);
+			count=0;
+		}
+		else if(count > 5){
+			// int a[4] = {x1,y1,x1+4,y1};
+			vec.push_back(x1);
+			vec.push_back(y1);
+			vec.push_back(x1+4);
+			vec.push_back(y1+4);
+			// int b[4] = {i-5,y1,i-1,y1};
+			vec.push_back(1);
+			vec.push_back(j-5);
+			vec.push_back(5);
+			vec.push_back(j-1);
+			count = 0;
+		}
+
 		j = -5;
 		count = 0;
 	}
