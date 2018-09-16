@@ -682,13 +682,16 @@ void Boardclass::update_board(string str,int p){
 	}
 	else if(token[0] == 'R' && token[1]=='S')
 	{
+		// cout<<"in correct loop\n";
+
+		token = strtok(NULL, " ");
 		r = (atoi(token));
 		token = strtok(NULL, " ");
 		s = (atoi(token));
 		convtodavid(r,s,arr);
 		int a1 = arr[0];
 		int b1 = arr[1];
-
+		// cout<<a1<<" "<<b1<<"\n";
 		token = strtok(NULL, " "); //this is M
 
 		token = strtok(NULL, " ");
@@ -698,7 +701,7 @@ void Boardclass::update_board(string str,int p){
 		convtodavid(r,s,arr);
 		int a2 = arr[0];
 		int b2 = arr[1];
-
+		// cout<<a2<<" "<<b2<<"\n";
 		token = strtok(NULL, " "); //this is M
 
 		token = strtok(NULL, " ");
@@ -744,6 +747,7 @@ void Boardclass::update_board(string str,int p){
 		else{
 			if(b2>b1){
 				while(q1!=b2){
+					// cout<<"inner correct\n";
 					board[p1+5][q1+5] = 0;
 					q1++;
 					p1++;
@@ -800,7 +804,7 @@ void Boardclass::update_board(string str,int p){
 		}
 
 		token = strtok(NULL, " ");
-
+		// cout<<"TOKEN END"<<token<<"\n";
 		if(token[0]=='S'){
 			token = strtok(NULL, " ");
 			r = (atoi(token));
@@ -1454,7 +1458,6 @@ void Boardclass::reverse_update(string str,int p){
 							// opp_rings_x[prev] = x2;
 							// opp_rings_y[prev] = y2;
 							//opp_ringsonboard++;
-
 						}
 						else{
 							board[x2+5][y2+5]=3;
@@ -2784,7 +2787,7 @@ vector<int> Boardclass::find_row(int p){
 			}
 			else{
 				if(count==5){
-					int a[4] = {x1,y1,i-1,j-1};
+					// int a[4] = {x1,y1,i-1,j-1};
 					vec.push_back(x1);
 					vec.push_back(y1);
 					vec.push_back(i-1);

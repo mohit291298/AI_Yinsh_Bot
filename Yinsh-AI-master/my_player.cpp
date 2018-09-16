@@ -363,17 +363,59 @@ void successor(Boardclass& b, Node*& n, int p){
 	if(n->visited==0){
 		int opp_rings_x[5],opp_rings_y[5],my_rings_x[5],my_rings_y[5];
 		int num_opp,num_my;
-		b.find_rings(opp_rings_x,opp_rings_y,my_rings_x,my_rings_y,num_opp,num_my);
+		// b.find_rings(opp_rings_x,opp_rings_y,my_rings_x,my_rings_y,num_opp,num_my);
 
 		// std::vector<Boardclass*> blist;
 		std::vector<string> strlist;
 		temp_row = b.find_row(p);
+		// Boardclass tempb;
+		// tempb.copy_board(b);
 		extend_before_S(strlist,b,temp_row,p,str);
+			// cout<<"BEFORE extend before\n";
+			// for(int i1=0;i1<11;i1++){
+			// 	for(int j1=0;j1<11;j1++)
+			// 		cout<<tempb.board[i1][j1]<<" ";
+			// 	cout<<"\n";
+			// }
+
+			// cout <<"\n";
+			// for(int i1=0;i1<11;i1++){
+			// 	for(int j1=0;j1<11;j1++){
+			// 	if(tempb.board[i1][j1]!=b.board[i1][j1])
+			// 		cout<<"After extend before ERROR---------------------------------------------\n";					
+			// 		cout<<b.board[i1][j1]<<" ";
+			// 	}
+			// 	cout<<"\n";
+			// }
+			// for(int k=0;k<(strlist.size());k++){
+			// 	if(strlist[k].length()!=0){
+			// 		cout<<"STRINGS------------------------------------";
+			// 	}
+			// 	cout<<strlist[k]<<"\n";
+			// }
 		// cout<<"SEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE\n";
 		// cout<<strlist[0];
 		// cout<<strlist.size();
 		for(int k=0;k<(strlist.size());k++){
 			//cout<<"-------------------------------------------------------------";
+		b.update_board(strlist[k],p);
+		// cout<<"after update\n";
+		// cout<<strlist[k]<<"\n";
+		// cout<<p<<"\n";
+			// for(int i1=0;i1<11;i1++){
+			// 	for(int j1=0;j1<11;j1++)
+			// 		cout<<b.board[i1][j1]<<" ";
+			// 	cout<<"\n";
+			// }		
+		b.find_rings(opp_rings_x,opp_rings_y,my_rings_x,my_rings_y,num_opp,num_my);
+   //          cout<<" RINGS:";
+			// for(int i1=0;i1<num_my;i1++){
+			// 	cout<<my_rings_x[i1]<<" "<<my_rings_y[i1]<<"\n";
+			// }
+			// cout<<"\n";
+			// for(int i1=0;i1<num_opp;i1++){
+			// 	cout<<opp_rings_x[i1]<<" "<<opp_rings_y[i1]<<"\n";
+			// }
 
 			if(p!=1)
 				num_rings = num_opp;
@@ -401,16 +443,18 @@ void successor(Boardclass& b, Node*& n, int p){
 					val = b.board[x1+5][y1+5];
 					while(val == 0 || val == 1 || val == 2){
 						if(val==0){
+							str1 = ("S "+ ring_rad +" M " + convtorad(x1,y1));
 							if(strlist[k].length()==0)
-								str1 = strlist[k] + ("S "+ ring_rad +" M " + convtorad(x1,y1));
+								str2 = str1;
 							else
-								str1 = strlist[k] + (" S "+ ring_rad +" M " + convtorad(x1,y1));
+								str2 = strlist[k] + " " + str1;
+
 							b.update_board(str1,p);
 							//cout<<"before find row\n";
 							temp_row = b.find_row(p);
 							//cout<<"after find row\n";
 							// n->move = "345";
-							extend_after_S(n,b,temp_row,p,str1);
+							extend_after_S(n,b,temp_row,p,str2);
 							b.reverse_update(str1,p);
 						}		
 						else{
@@ -422,14 +466,19 @@ void successor(Boardclass& b, Node*& n, int p){
 								val = b.board[x1+5][y1+5];
 							}
 							if(val==0 && y1<=5){
+							str1 = ("S "+ ring_rad +" M " + convtorad(x1,y1));
 							if(strlist[k].length()==0)
-								str1 = strlist[k]+("S "+ ring_rad +" M " + convtorad(x1,y1));
+								str2 = str1;
 							else
-								str1 = strlist[k] + (" S "+ ring_rad +" M " + convtorad(x1,y1));
-								b.update_board(str1,p);
+								str2 = strlist[k] + " " + str1;
+							
+							b.update_board(str1,p);
+							//cout<<"before find row\n";
 							temp_row = b.find_row(p);
-							extend_after_S(n,b,temp_row,p,str1);
-								b.reverse_update(str1,p);					
+							//cout<<"after find row\n";
+							// n->move = "345";
+							extend_after_S(n,b,temp_row,p,str2);
+							b.reverse_update(str1,p);
 							}
 						}
 						y1++;
@@ -449,15 +498,19 @@ void successor(Boardclass& b, Node*& n, int p){
 					while(val == 0 || val == 1 || val == 2){
 						if(val==0){
 
+							str1 = ("S "+ ring_rad +" M " + convtorad(x1,y1));
 							if(strlist[k].length()==0)
-								str1 = strlist[k]+("S "+ ring_rad +" M " + convtorad(x1,y1));
+								str2 = str1;
 							else
-								str1 = strlist[k] + (" S "+ ring_rad +" M " + convtorad(x1,y1));
-								b.update_board(str1,p);
+								str2 = strlist[k] + " " + str1;
+							
+							b.update_board(str1,p);
+							//cout<<"before find row\n";
 							temp_row = b.find_row(p);
-							//cout<<temp_row.size()<<"\n";
-							extend_after_S(n,b,temp_row,p,str1);
-								b.reverse_update(str1,p);					
+							//cout<<"after find row\n";
+							// n->move = "345";
+							extend_after_S(n,b,temp_row,p,str2);
+							b.reverse_update(str1,p);
 
 						}
 						else{
@@ -469,14 +522,19 @@ void successor(Boardclass& b, Node*& n, int p){
 								val = b.board[x1+5][y1+5];
 							}
 							if(val==0 && y1>=-5){
+							str1 = ("S "+ ring_rad +" M " + convtorad(x1,y1));
 							if(strlist[k].length()==0)
-								str1 = strlist[k]+("S "+ ring_rad +" M " + convtorad(x1,y1));
+								str2 = str1;
 							else
-								str1 = strlist[k] + (" S "+ ring_rad +" M " + convtorad(x1,y1));
-								b.update_board(str1,p);
+								str2 = strlist[k] + " " + str1;
+							
+							b.update_board(str1,p);
+							//cout<<"before find row\n";
 							temp_row = b.find_row(p);
-							extend_after_S(n,b,temp_row,p,str1);
-								b.reverse_update(str1,p);					
+							//cout<<"after find row\n";
+							// n->move = "345";
+							extend_after_S(n,b,temp_row,p,str2);
+							b.reverse_update(str1,p);
 							}
 						}
 						y1--;
@@ -494,14 +552,19 @@ void successor(Boardclass& b, Node*& n, int p){
 					val = b.board[x1+5][y1+5];
 					while(val == 0 || val == 1 || val == 2){
 						if(val==0){
+							str1 = ("S "+ ring_rad +" M " + convtorad(x1,y1));
 							if(strlist[k].length()==0)
-								str1 = strlist[k]+("S "+ ring_rad +" M " + convtorad(x1,y1));
+								str2 = str1;
 							else
-								str1 = strlist[k] + (" S "+ ring_rad +" M " + convtorad(x1,y1));
-								b.update_board(str1,p);
+								str2 = strlist[k] + " " + str1;
+							
+							b.update_board(str1,p);
+							//cout<<"before find row\n";
 							temp_row = b.find_row(p);
-							extend_after_S(n,b,temp_row,p,str1);
-								b.reverse_update(str1,p);					
+							//cout<<"after find row\n";
+							// n->move = "345";
+							extend_after_S(n,b,temp_row,p,str2);
+							b.reverse_update(str1,p);
 						}
 						else{
 							flag = 1;
@@ -512,14 +575,19 @@ void successor(Boardclass& b, Node*& n, int p){
 								val = b.board[x1+5][y1+5];
 							}
 							if(val==0 && x1<=5){
+							str1 = ("S "+ ring_rad +" M " + convtorad(x1,y1));
 							if(strlist[k].length()==0)
-								str1 = strlist[k]+("S "+ ring_rad +" M " + convtorad(x1,y1));
+								str2 = str1;
 							else
-								str1 = strlist[k] + (" S "+ ring_rad +" M " + convtorad(x1,y1));
-								b.update_board(str1,p);
+								str2 = strlist[k] + " " + str1;
+							
+							b.update_board(str1,p);
+							//cout<<"before find row\n";
 							temp_row = b.find_row(p);
-							extend_after_S(n,b,temp_row,p,str1);
-								b.reverse_update(str1,p);					
+							//cout<<"after find row\n";
+							// n->move = "345";
+							extend_after_S(n,b,temp_row,p,str2);
+							b.reverse_update(str1,p);
 							}
 						}
 						x1++;
@@ -536,14 +604,19 @@ void successor(Boardclass& b, Node*& n, int p){
 					val = b.board[x1+5][y1+5];
 					while(val == 0 || val == 1 || val == 2){
 						if(val==0){
+							str1 = ("S "+ ring_rad +" M " + convtorad(x1,y1));
 							if(strlist[k].length()==0)
-								str1 = strlist[k]+("S "+ ring_rad +" M " + convtorad(x1,y1));
+								str2 = str1;
 							else
-								str1 = strlist[k] + (" S "+ ring_rad +" M " + convtorad(x1,y1));
-								b.update_board(str1,p);
+								str2 = strlist[k] + " " + str1;
+							
+							b.update_board(str1,p);
+							//cout<<"before find row\n";
 							temp_row = b.find_row(p);
-							extend_after_S(n,b,temp_row,p,str1);
-								b.reverse_update(str1,p);					
+							//cout<<"after find row\n";
+							// n->move = "345";
+							extend_after_S(n,b,temp_row,p,str2);
+							b.reverse_update(str1,p);
 						}
 						else{
 							flag = 1;
@@ -554,14 +627,19 @@ void successor(Boardclass& b, Node*& n, int p){
 								val = b.board[x1+5][y1+5];
 							}
 							if(val==0 && x1>=-5){
+							str1 = ("S "+ ring_rad +" M " + convtorad(x1,y1));
 							if(strlist[k].length()==0)
-								str1 = strlist[k]+("S "+ ring_rad +" M " + convtorad(x1,y1));
+								str2 = str1;
 							else
-								str1 = strlist[k] + (" S "+ ring_rad +" M " + convtorad(x1,y1));
-								b.update_board(str1,p);
+								str2 = strlist[k] + " " + str1;
+							
+							b.update_board(str1,p);
+							//cout<<"before find row\n";
 							temp_row = b.find_row(p);
-							extend_after_S(n,b,temp_row,p,str1);
-								b.reverse_update(str1,p);					
+							//cout<<"after find row\n";
+							// n->move = "345";
+							extend_after_S(n,b,temp_row,p,str2);
+							b.reverse_update(str1,p);
 							}
 						}
 						x1--;
@@ -579,14 +657,19 @@ void successor(Boardclass& b, Node*& n, int p){
 					val = b.board[x1+5][y1+5];
 					while(val == 0 || val == 1 || val == 2){
 						if(val==0){
+							str1 = ("S "+ ring_rad +" M " + convtorad(x1,y1));
 							if(strlist[k].length()==0)
-								str1 = strlist[k]+("S "+ ring_rad +" M " + convtorad(x1,y1));
+								str2 = str1;
 							else
-								str1 = strlist[k] + (" S "+ ring_rad +" M " + convtorad(x1,y1));
-								b.update_board(str1,p);
+								str2 = strlist[k] + " " + str1;
+							
+							b.update_board(str1,p);
+							//cout<<"before find row\n";
 							temp_row = b.find_row(p);
-							extend_after_S(n,b,temp_row,p,str1);
-								b.reverse_update(str1,p);					
+							//cout<<"after find row\n";
+							// n->move = "345";
+							extend_after_S(n,b,temp_row,p,str2);
+							b.reverse_update(str1,p);
 						}
 						else{
 							flag = 1;
@@ -598,14 +681,19 @@ void successor(Boardclass& b, Node*& n, int p){
 								val = b.board[x1+5][y1+5];
 							}
 							if(val==0 && y1<=5 && x1<=5){
+							str1 = ("S "+ ring_rad +" M " + convtorad(x1,y1));
 							if(strlist[k].length()==0)
-								str1 = strlist[k]+("S "+ ring_rad +" M " + convtorad(x1,y1));
+								str2 = str1;
 							else
-								str1 = strlist[k] + (" S "+ ring_rad +" M " + convtorad(x1,y1));
-								b.update_board(str1,p);
+								str2 = strlist[k] + " " + str1;
+							
+							b.update_board(str1,p);
+							//cout<<"before find row\n";
 							temp_row = b.find_row(p);
-							extend_after_S(n,b,temp_row,p,str1);
-								b.reverse_update(str1,p);					
+							//cout<<"after find row\n";
+							// n->move = "345";
+							extend_after_S(n,b,temp_row,p,str2);
+							b.reverse_update(str1,p);
 							}
 						}
 						y1++;
@@ -624,14 +712,19 @@ void successor(Boardclass& b, Node*& n, int p){
 					val = b.board[x1+5][y1+5];
 					while(val == 0 || val == 1 || val == 2){
 						if(val==0){
+							str1 = ("S "+ ring_rad +" M " + convtorad(x1,y1));
 							if(strlist[k].length()==0)
-								str1 = strlist[k]+("S "+ ring_rad +" M " + convtorad(x1,y1));
+								str2 = str1;
 							else
-								str1 = strlist[k] + (" S "+ ring_rad +" M " + convtorad(x1,y1));
-								b.update_board(str1,p);
+								str2 = strlist[k] + " " + str1;
+							
+							b.update_board(str1,p);
+							//cout<<"before find row\n";
 							temp_row = b.find_row(p);
-							extend_after_S(n,b,temp_row,p,str1);
-								b.reverse_update(str1,p);					
+							//cout<<"after find row\n";
+							// n->move = "345";
+							extend_after_S(n,b,temp_row,p,str2);
+							b.reverse_update(str1,p);
 						}
 						else{
 							flag =1;
@@ -643,14 +736,19 @@ void successor(Boardclass& b, Node*& n, int p){
 								val = b.board[x1+5][y1+5];
 							}
 							if(val==0 && y1>=-5 && x1>=-5){
+							str1 = ("S "+ ring_rad +" M " + convtorad(x1,y1));
 							if(strlist[k].length()==0)
-								str1 = strlist[k]+("S "+ ring_rad +" M " + convtorad(x1,y1));
+								str2 = str1;
 							else
-								str1 = strlist[k] + (" S "+ ring_rad +" M " + convtorad(x1,y1));
-								b.update_board(str1,p);
+								str2 = strlist[k] + " " + str1;
+							
+							b.update_board(str1,p);
+							//cout<<"before find row\n";
 							temp_row = b.find_row(p);
-							extend_after_S(n,b,temp_row,p,str1);
-								b.reverse_update(str1,p);					
+							//cout<<"after find row\n";
+							// n->move = "345";
+							extend_after_S(n,b,temp_row,p,str2);
+							b.reverse_update(str1,p);
 							}
 						}
 						y1--;
@@ -661,6 +759,7 @@ void successor(Boardclass& b, Node*& n, int p){
 					}
 				}
 			}
+			b.reverse_update(strlist[k],p);
 		}
 	}
 	n->visited = 1;
@@ -718,7 +817,7 @@ void createTree ( Node*& n, int depth, int max_depth, int p, Boardclass& b ) {
 
         // cout<<"after successor\n";
         // cout<<n->children.size()<<"\n";
-        Boardclass tempb,tempb2;
+        // Boardclass tempb,tempb2;
         for ( int i = 0; i < n->children.size(); i++ ){
    //      	Node* tem = n->children[i];
    //      	cout<<tem->p<<"\n";
@@ -951,7 +1050,7 @@ int main(){
 		main_board.update_board(str,2);
 	}
 		// cout<<"In main\n";
-	Boardclass tempb;
+	// Boardclass tempb;
 	while(1){
 
 		//cout<<"your move";//code it
@@ -988,6 +1087,9 @@ int main(){
 		// }
 
 		getline(cin, str);
+		if(str.length()==3)
+			return 0;
+
 		main_board.update_board(str,2);
 		
 		// cout<<"Input chance\n";
