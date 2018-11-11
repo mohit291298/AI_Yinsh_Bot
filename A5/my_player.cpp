@@ -1766,7 +1766,7 @@ int main(){
 		// 		cout<<main_board.board[i1][j1]<<" ";
 		// 	cout<<"\n";
 		// }
-		if(!(player==2 && i==4)){
+		if(!(player==2 && i==(M-1))){
 			getline(cin, str);
 			// cout<<"Okay "<<main_board.my_ringsonboard<<" "<<main_board.opp_ringsonboard<<"\n";
 			main_board.update_board(str,2);
