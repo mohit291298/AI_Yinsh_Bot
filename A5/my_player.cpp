@@ -1465,10 +1465,14 @@ int main(){
 	token = strtok(NULL, " ");
 	int time_left = atoi(token);
 
-	cin>>N;
-	cin>>M;
-	cin>>K;
+	token = strtok(NULL, " ");
+	int K = atoi(token);
 
+	// cin>>N;
+	// cin>>M;
+	// cin>>K;
+	N = n;
+	M = n;
 	// for(int i=0;i<11;i++){
 	// 	for(int j=0;j<11;j++)
 	// 		cout<<board[i][j]<<" ";
