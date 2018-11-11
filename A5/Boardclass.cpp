@@ -10,11 +10,11 @@
 using namespace std;
 
 // Date constructor
-Boardclass::Boardclass()
+Boardclass::Boardclass(int a)
 {
 	my_ringsonboard = 0;
 	opp_ringsonboard = 0;
-	if(N==5){
+	if(a==5){
 		for(int i = -6;i<=6;i++){
 			board[i+6][0] = -1;
 			board[i+6][12] = -1;

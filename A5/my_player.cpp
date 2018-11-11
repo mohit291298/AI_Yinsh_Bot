@@ -1478,7 +1478,7 @@ int main(){
 	// 		cout<<board[i][j]<<" ";
 	// 	cout<<"\n";
 	// }
-	Boardclass main_board;
+	Boardclass main_board(N);
 	
 	main_board.N = N;
 	main_board.M = M;

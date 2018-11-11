@@ -17,7 +17,7 @@ public:
 	// int my_rings_x[5],my_rings_y[5];
 	// int opp_rings_x[5],opp_rings_y[5];
 
-    Boardclass();
+    Boardclass(int a);
  
     void reverse_update(string str,int p);
     void update_board(string str,int p);
