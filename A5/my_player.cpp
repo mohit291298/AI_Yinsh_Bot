@@ -489,7 +489,7 @@ void successor(Boardclass& b, Node*& n, int p){
 							flag =1;
 							while(val==1 || val==2){
 								y1++;
-								if(y1>5)
+								if(y1>6)
 									break;
 								val = b.board[x1+6][y1+6];
 							}
