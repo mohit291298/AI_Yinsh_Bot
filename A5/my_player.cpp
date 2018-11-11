@@ -45,6 +45,189 @@ std::string trim(const std::string& str,
 //p=1 if my chance(max node)
 //p=0 if opp chance(min node)
 
+int myRingPlacement(Boardclass& b, int marker_i, int marker_j){
+    int ring_affect = 0;
+    //right
+    marker_i = marker_i + 6;
+    marker_j = marker_j + 6;
+
+    int next = marker_j + 1;
+    while( next < 13 ){
+        if (b.board[marker_i][next] == 4 || b.board[marker_i][next] == -1){
+            break;
+        }
+        else if (b.board[marker_i][next] == 3){
+            ring_affect ++;
+            break;
+        }
+        next++ ;
+    }
+
+    //left
+    int prev = marker_j - 1;
+    while ( prev >= 0 ){
+        if (b.board[marker_i][prev] == 4 || b.board[marker_i][prev] == -1){
+            break;
+        }
+        else if (b.board[marker_i][prev] == 3){
+            ring_affect ++;
+            break;
+        }
+        prev-- ;
+    }
+
+    //down
+    int down = marker_i + 1;
+    while( down < 13 ){
+        if (b.board[down][marker_j] == 4 || b.board[down][marker_j] == -1){
+            break;
+        }
+        else if (b.board[down][marker_j] == 3){
+            ring_affect ++;
+            break;
+        }
+        down++ ;
+    }
+
+    //up 
+    int up = marker_i - 1;
+    while( up >= 0 ){
+        if (b.board[up][marker_j] == 4 || b.board[up][marker_j] == -1){
+            break;
+        }
+        else if (b.board[up][marker_j] == 3){
+            ring_affect ++;
+            break;
+        }
+        up-- ;
+    }
+
+    // down right
+    next = marker_j + 1;
+    down = marker_i + 1;
+    while( next < 13 && down < 13 ){
+        if (b.board[down][next] == 4 || b.board[down][next] == -1){
+            break;
+        }
+        else if (b.board[down][next] == 3){
+            ring_affect ++;
+            break;
+        }
+        next++;
+        down++;
+    }
+
+    // up left
+    prev = marker_j - 1;
+    up = marker_i - 1;
+    while( prev >= 0 && up >= 0 ){
+        if (b.board[up][prev] == 4 || b.board[up][prev] == -1){
+            break;
+        }
+        else if (b.board[up][prev] == 3){
+            ring_affect ++;
+            break;
+        }
+        up--;
+        prev--;
+    }
+
+    return ring_affect;
+
+}
+
+/* number of my markers that are affected by opponent rings */
+int oppRingPlacement(Boardclass& b, int marker_i, int marker_j){
+    int ring_affect = 0;
+    //right
+
+    marker_i = marker_i + 6;
+    marker_j = marker_j + 6;
+
+    int next = marker_j + 1;
+    while( next < 13 ){
+        if (b.board[marker_i][next] == 3 || b.board[marker_i][next] == -1){
+            break;
+        }
+        else if (b.board[marker_i][next] == 4){
+            ring_affect ++;
+            break;
+        }
+        next++ ;
+    }
+
+    //left
+    int prev = marker_j - 1;
+    while ( prev >= 0 ){
+        if (b.board[marker_i][prev] == 3 || b.board[marker_i][prev] == -1){
+            break;
+        }
+        else if (b.board[marker_i][prev] == 4){
+            ring_affect ++;
+            break;
+        }
+        prev-- ;
+    }
+
+    //down
+    int down = marker_i + 1;
+    while( down < 13 ){
+        if (b.board[down][marker_j] == 3 || b.board[down][marker_j] == -1){
+            break;
+        }
+        else if (b.board[down][marker_j] == 4){
+            ring_affect ++;
+            break;
+        }
+        down++ ;
+    }
+
+    //up 
+    int up = marker_i - 1;
+    while( up >= 0 ){
+        if (b.board[up][marker_j] == 3 || b.board[up][marker_j] == -1){
+            break;
+        }
+        else if (b.board[up][marker_j] == 4){
+            ring_affect ++;
+            break;
+        }
+        up-- ;
+    }
+
+    // down right
+    next = marker_j + 1;
+    down = marker_i + 1;
+    while( next < 13 && down < 13 ){
+        if (b.board[down][next] == 3 || b.board[down][next] == -1){
+            break;
+        }
+        else if (b.board[down][next] == 4){
+            ring_affect ++;
+            break;
+        }
+        next++;
+        down++;
+    }
+
+    // up left
+    prev = marker_j - 1;
+    up = marker_i - 1;
+    while( prev >= 0 && up >= 0 ){
+        if (b.board[up][prev] == 3 || b.board[up][prev] == -1){
+            break;
+        }
+        else if (b.board[up][prev] == 4){
+            ring_affect ++;
+            break;
+        }
+        up--;
+        prev--;
+    }
+
+    return ring_affect;
+}
+
 string convtorad(int a,int b){
 	//convert radial to david coordinates
 	int arr[2];
@@ -1010,6 +1193,7 @@ double calculateHeuristic(Boardclass& b,int *opp_rings_x,int *opp_rings_y,int *m
 
 	count = 0;
 	j = -6;
+	my_count = 0;
 	for(int z=-5;z<=6;z++){
 		i = z;
 		while(i<=6 && j<=6){
@@ -1635,22 +1819,26 @@ int main(){
 		flag2 = 0;
 		createTree ( nod_pointer, 0, 1, 1, main_board,-1000000,1000000);
 		main_board.find_rings(opp_rings_x,opp_rings_y,my_rings_x,my_rings_y,num_opp,num_my);
-
-		if(num_my != nod_pointer->num_myrings){
-			flag2 =0;
-					// cerr<"getting used------------------------------------------------\n";
+		if(num_opp == (M -2)){
+			flag2 = 0;
 		}
 		else{
-			for(i1 =0;i1<nod_pointer->children.size();i1++){
-				if((nod_pointer->children[i1]->num_myrings - num_my)< 0){
-					cout<<nod_pointer->children[i1]->move<<"\n";
-					//cerr<<nod_pointer->children[i1]->move<<"\n";
-					main_board.update_board(nod_pointer->children[i1]->move,1);
-					// cerr<"getting used------------------------------------------------\n";
-					flag2 =1;
-					break;				
-				}
-			}		
+			if(num_my != nod_pointer->num_myrings){
+				flag2 =0;
+						// cerr<"getting used------------------------------------------------\n";
+			}
+			else{
+				for(i1 =0;i1<nod_pointer->children.size();i1++){
+					if((nod_pointer->children[i1]->num_myrings - num_my)< 0){
+						cout<<nod_pointer->children[i1]->move<<"\n";
+						//cerr<<nod_pointer->children[i1]->move<<"\n";
+						main_board.update_board(nod_pointer->children[i1]->move,1);
+						// cerr<"getting used------------------------------------------------\n";
+						flag2 =1;
+						break;				
+					}
+				}		
+			}
 		}
 		if(flag2!=1){
 			createTree ( nod_pointer, 0, 3, 1, main_board,-1000000,1000000);
