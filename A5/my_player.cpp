@@ -1010,126 +1010,160 @@ double calculateHeuristic(Boardclass& b,int *opp_rings_x,int *opp_rings_y,int *m
 	if(num_opp == (M-2))
 		h = 10000*(M - num_my) - 12000*((M - num_opp));
 	else
-		h = 10000*(M - num_my) - 9000*((M - num_opp));
+		h = 10000*(M - num_my) - 10000*((M - num_opp));
 
 	int count =0;
 	int my_count = 0;
+	int my_attack = 0;
+	int opp_attack = 0;
 	for (int i = -6; i <=6; i++){
 		for (int j = -6; j <=6; j++){
 			if(b.board[i+6][j+6]==1){
 				my_count++;
+				my_attack += oppRingPlacement(b,i,j);
 				// opp_marker = opp_marker + 1;
 			}
 			else{
 				if(my_count!=0){
-					if(my_count <= (K-2))
+					if(my_count < (K-2))
 						h = h + pow(4,my_count);
+					else if(my_count == (K-2)) 
+						h = h + pow(4,my_count) - my_attack;
 					else if(my_count>(K-2))
-						h = h + 700;
+						h = h + 700 - my_attack;
 				}
 				my_count = 0;
+				my_attack = 0;
 			}
 			if(b.board[i+6][j+6]==2){
 				count++;
+				opp_attack += myRingPlacement(b,i,j);
 				// opp_marker = opp_marker + 1;
 			}
 			else{
 				if(count!=0){
-					if(count <= (K-2))
+					if(count < (K-2))
 						h = h - pow(4,count);
+					else if(count==(K-2))
+						h = h - pow(4,count) + opp_attack;
 					else if(count>(K-2)){
 						if(num_opp==(M-2))
-							h = h - 1200;
+							h = h - 1200 + opp_attack;
 						else
-							h = h - 600;
+							h = h - 700 + opp_attack;
 					}
 				}
 				count = 0;
+				opp_attack = 0;
 			}
 		}
 		if(my_count!=0){
-			if(my_count <= (K-2))
+			if(my_count < (K-2))
 				h = h + pow(4,my_count);
+			else if(my_count == (K-2)) 
+				h = h + pow(4,my_count) - my_attack;
 			else if(my_count>(K-2))
-				h = h + 700;
+				h = h + 700 - my_attack;
 		}
 		my_count = 0;
+		my_attack = 0;
 
 		if(count!=0){
-			if(count <= (K-2))
+			if(count < (K-2))
 				h = h - pow(4,count);
+			else if(count==(K-2))
+				h = h - pow(4,count) + opp_attack;
 			else if(count>(K-2)){
 				if(num_opp==(M-2))
-					h = h - 1200;
+					h = h - 1200 + opp_attack;
 				else
-					h = h - 600;
+					h = h - 700 + opp_attack;
 			}
 		}
 		count = 0;
+		opp_attack = 0;
 	}
 //	cerr<<"compute heuristic started\n";
 
 	count = 0;
-	my_count = 0;	
+	my_count = 0;
+	my_attack = 0;
+	opp_attack = 0;	
 	for (int j = -6; j <=6; j++){
 		for (int i = -6; i <=6; i++){
 			// if (b.board[i+5][j+5] == 1) { my_marker = my_marker + 1;}
 			if(b.board[i+6][j+6]==1){
 				my_count++;
+				my_attack += oppRingPlacement(b,i,j);
 				// opp_marker = opp_marker + 1;
 			}
 			else{
 				if(my_count!=0){
-					if(my_count <= (K-2))
+					if(my_count < (K-2))
 						h = h + pow(4,my_count);
+					else if(my_count == (K-2)) 
+						h = h + pow(4,my_count) - my_attack;
 					else if(my_count>(K-2))
-						h = h + 700;
+						h = h + 700 - my_attack;
 				}
 				my_count = 0;
+				my_attack = 0;
 			}
 
 			if(b.board[i+6][j+6]==2){
 				count++;
 				// opp_marker = opp_marker + 1;
+				opp_attack += myRingPlacement(b,i,j);
 			}
 			else{
 				if(count!=0){
-					if(count <= (K-2))
+					if(count < (K-2))
 						h = h - pow(4,count);
+					else if(count==(K-2))
+						h = h - pow(4,count) + opp_attack;
 					else if(count>(K-2)){
 						if(num_opp==(M-2))
-							h = h - 1200;
+							h = h - 1200 + opp_attack;
 						else
-							h = h - 600;
+							h = h - 700 + opp_attack;
 					}
 				}
 				count = 0;
+				opp_attack = 0;
 			}
 		}
 		if(my_count!=0){
-			if(my_count <= (K-2))
+			if(my_count < (K-2))
 				h = h + pow(4,my_count);
+			else if(my_count == (K-2)) 
+				h = h + pow(4,my_count) - my_attack;
 			else if(my_count>(K-2))
-				h = h + 700;
+				h = h + 700 - my_attack;
 		}
 		my_count = 0;
+		my_attack = 0;
 
 		if(count!=0){
-			if(count <= (K-2))
+			if(count < (K-2))
 				h = h - pow(4,count);
+			else if(count==(K-2))
+				h = h - pow(4,count) + opp_attack;
 			else if(count>(K-2)){
 				if(num_opp==(M-2))
-					h = h - 1200;
+					h = h - 1200 + opp_attack;
 				else
-					h = h - 600;
+					h = h - 700 + opp_attack;
 			}
 		}
 		count = 0;
+		opp_attack = 0;
 	}
 //	cerr<<"compute heuristic started\n";
 
 	count =0;
 	my_count = 0;
+	my_attack = 0;
+	opp_attack = 0;
 	int i = -6;
 	int j;
 	for(int z=-6;z<=6;z++){
@@ -1137,56 +1171,70 @@ double calculateHeuristic(Boardclass& b,int *opp_rings_x,int *opp_rings_y,int *m
 		while(i<=6 && j<=6){
 			if(b.board[i+6][j+6]==1){
 				my_count++;
+				my_attack += oppRingPlacement(b,i,j);
 				// opp_marker = opp_marker + 1;
 			}
 			else{
 				if(my_count!=0){
-					if(my_count <= (K-2))
+					if(my_count < (K-2))
 						h = h + pow(4,my_count);
+					else if(my_count == (K-2)) 
+						h = h + pow(4,my_count) - my_attack;
 					else if(my_count>(K-2))
-						h = h + 700;
+						h = h + 700 - my_attack;
 				}
 				my_count = 0;
+				my_attack = 0;
 			}
 
 			if(b.board[i+6][j+6]==2){
 				count++;
+				opp_attack += myRingPlacement(b,i,j);
 			}
 			else{
 				if(count!=0){
-					if(count <= (K-2))
+					if(count < (K-2))
 						h = h - pow(4,count);
+					else if(count==(K-2))
+						h = h - pow(4,count) + opp_attack;
 					else if(count>(K-2)){
 						if(num_opp==(M-2))
-							h = h - 1200;
+							h = h - 1200 + opp_attack;
 						else
-							h = h - 600;
+							h = h - 700 + opp_attack;
 					}
 				}
 				count = 0;
+				opp_attack = 0;
 			}
 		i++;
 		j++;						
 		}
 		if(my_count!=0){
-			if(my_count <= (K-2))
+			if(my_count < (K-2))
 				h = h + pow(4,my_count);
+			else if(my_count == (K-2)) 
+				h = h + pow(4,my_count) - my_attack;
 			else if(my_count>(K-2))
-				h = h + 700;
+				h = h + 700 - my_attack;
 		}
 		my_count = 0;
+		my_attack = 0;
 
 		if(count!=0){
-			if(count <= (K-2))
+			if(count < (K-2))
 				h = h - pow(4,count);
+			else if(count==(K-2))
+				h = h - pow(4,count) + opp_attack;
 			else if(count>(K-2)){
 				if(num_opp==(M-2))
-					h = h - 1200;
+					h = h - 1200 + opp_attack;
 				else
-					h = h - 600;
+					h = h - 700 + opp_attack;
 			}
 		}
 		count = 0;
+		opp_attack = 0;
 		i = -6;		
 	}
 //	cerr<<"compute heuristic started\n";
@@ -1194,63 +1242,78 @@ double calculateHeuristic(Boardclass& b,int *opp_rings_x,int *opp_rings_y,int *m
 	count = 0;
 	j = -6;
 	my_count = 0;
+	my_attack = 0;
+	opp_attack = 0;
 	for(int z=-5;z<=6;z++){
 		i = z;
 		while(i<=6 && j<=6){
 //			cerr<<"compute heuristic started\n";
 			if(b.board[i+6][j+6]==1){
+				my_attack += oppRingPlacement(b,i,j);
 				my_count++;
 				// opp_marker = opp_marker + 1;
 			}
 			else{
 				if(my_count!=0){
-					if(my_count <= (K-2))
+					if(my_count < (K-2))
 						h = h + pow(4,my_count);
+					else if(my_count == (K-2)) 
+						h = h + pow(4,my_count) - my_attack;
 					else if(my_count>(K-2))
-						h = h + 700;
+						h = h + 700 - my_attack;
 				}
 				my_count = 0;
+				my_attack = 0;
 			}
 
 			if(b.board[i+6][j+6]==2){
 				count++;
+				opp_attack += myRingPlacement(b,i,j);
 			}
 			else{
 				if(count!=0){
-					if(count <= (K-2))
+					if(count < (K-2))
 						h = h - pow(4,count);
+					else if(count==(K-2))
+						h = h - pow(4,count) + opp_attack;
 					else if(count>(K-2)){
 						if(num_opp==(M-2))
-							h = h - 1200;
+							h = h - 1200 + opp_attack;
 						else
-							h = h - 600;
+							h = h - 700 + opp_attack;
 					}
 				}
 				count = 0;
+				opp_attack = 0;
 			}
 			i++;
 			j++;			
 		}
 		if(my_count!=0){
-			if(my_count <= (K-2))
+			if(my_count < (K-2))
 				h = h + pow(4,my_count);
-			else if(my_count>(K-2)){
-				h = h + 700;
-			}
+			else if(my_count == (K-2)) 
+				h = h + pow(4,my_count) - my_attack;
+			else if(my_count>(K-2))
+				h = h + 700 - my_attack;
 		}
 		my_count = 0;
+		my_attack = 0;
 
 		if(count!=0){
-			if(count <= (K-2))
+			if(count < (K-2))
 				h = h - pow(4,count);
+			else if(count==(K-2))
+				h = h - pow(4,count) + opp_attack;
 			else if(count>(K-2)){
 				if(num_opp==(M-2))
-					h = h - 1100;
+					h = h - 1200 + opp_attack;
 				else
-					h = h - 600;
+					h = h - 700 + opp_attack;
 			}
 		}
 		count = 0;
+		opp_attack = 0;
 		j = -6;
 	}
 	// int x,x1;
