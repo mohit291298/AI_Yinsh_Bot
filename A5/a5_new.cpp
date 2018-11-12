@@ -14,7 +14,7 @@
 using namespace std;
 
 #define matrix_size 11;
-#define DBL_MAX 1000000;
+#define DBL_MAX 1000000000;
 // int board[11][11];
 /*-1 -> INVALID Position
 0 -> EMPTY position
@@ -1000,17 +1000,17 @@ double calculateHeuristic(Boardclass& b,int *opp_rings_x,int *opp_rings_y,int *m
 	//double my_marker =0.0;
 	double opp_marker = 0.0;
 	if(num_my<(M - 2)){
-		h = 950000;
+		h = 500000000;
 		return h;
 	}
 	if(num_opp<(M - 2)){
-		h = -950000;
+		h = -500000000;
 		return h;
 	}
 	if(num_opp == (M-2))
-		h = 10000*(M - num_my) - 12000*((M - num_opp));
+		h = 5000000*(M - num_my) - 5100000*((M - num_opp));
 	else
-		h = 10000*(M - num_my) - 10000*((M - num_opp));
+		h = 5000000*(M - num_my) - 5000000*((M - num_opp));
 
 	int count =0;
 	int my_count = 0;
@@ -1025,12 +1025,26 @@ double calculateHeuristic(Boardclass& b,int *opp_rings_x,int *opp_rings_y,int *m
 			}
 			else{
 				if(my_count!=0){
-					if(my_count < (K-2))
-						h = h + pow(4,my_count);
-					else if(my_count == (K-2)) 
-						h = h + pow(4,my_count) - my_attack;
-					else if(my_count>(K-2))
-						h = h + 700 - my_attack;
+					if(my_count == 1)
+						h = h + 1;
+					else if(my_count == 2){
+						h = h + 5;
+					}
+					else if(my_count == 3){
+						if(K==5)
+							h = h + 100 - my_attack;
+						else
+							h = h + 100;
+					}
+					else if(my_count == 4){
+						h = h + 20000 - my_attack;
+					}
+					else if(my_count >= 5 && K==5){
+						h = h + 21000 - my_attack;
+					}
+					else if(my_count >= 5 && K==6){
+						h = h + 100000 - my_attack;
+					}
 				}
 				my_count = 0;
 				my_attack = 0;
@@ -1042,15 +1056,36 @@ double calculateHeuristic(Boardclass& b,int *opp_rings_x,int *opp_rings_y,int *m
 			}
 			else{
 				if(count!=0){
-					if(count < (K-2))
-						h = h - pow(4,count);
-					else if(count==(K-2))
-						h = h - pow(4,count) + opp_attack;
-					else if(count>(K-2)){
-						if(num_opp==(M-2))
-							h = h - 1200 + opp_attack;
+					if(count == 1)
+						h = h - 1;
+					else if(count == 2){
+						h = h - 5;
+					}
+					else if(count == 3){
+						if(K==5)
+							h = h - 100 + opp_attack;
 						else
-							h = h - 700 + opp_attack;
+							h = h - 100;
+					}
+					else if(count == 4){
+						if(K==5){
+							if(num_opp==(M-2))
+								h = h - 22000 + opp_attack;
+							else
+								h = h - 20000 + opp_attack;							
+						}
+						else{
+							h = h - 20000 + opp_attack;
+						}
+					}
+					else if(count >= 5 && K==5){
+						h = h - 21000 + opp_attack;
+					}
+					else if(count >= 5 && K==6){
+						if(num_opp==(M-2))
+							h = h - 110000 + opp_attack;
+						else
+							h = h - 100000 + opp_attack;
 					}
 				}
 				count = 0;
@@ -1058,26 +1093,61 @@ double calculateHeuristic(Boardclass& b,int *opp_rings_x,int *opp_rings_y,int *m
 			}
 		}
 		if(my_count!=0){
-			if(my_count < (K-2))
-				h = h + pow(4,my_count);
-			else if(my_count == (K-2)) 
-				h = h + pow(4,my_count) - my_attack;
-			else if(my_count>(K-2))
-				h = h + 700 - my_attack;
+			if(my_count == 1)
+				h = h + 1;
+			else if(my_count == 2){
+				h = h + 5;
+			}
+			else if(my_count == 3){
+				if(K==5)
+					h = h + 100 - my_attack;
+				else
+					h = h + 100;
+			}
+			else if(my_count == 4){
+				h = h + 20000 - my_attack;
+			}
+			else if(my_count >= 5 && K==5){
+				h = h + 21000 - my_attack;
+			}
+			else if(my_count >= 5 && K==6){
+				h = h + 100000 - my_attack;
+			}
 		}
 		my_count = 0;
 		my_attack = 0;
 
 		if(count!=0){
-			if(count < (K-2))
-				h = h - pow(4,count);
-			else if(count==(K-2))
-				h = h - pow(4,count) + opp_attack;
-			else if(count>(K-2)){
-				if(num_opp==(M-2))
-					h = h - 1200 + opp_attack;
+			if(count == 1)
+				h = h - 1;
+			else if(count == 2){
+				h = h - 5;
+			}
+			else if(count == 3){
+				if(K==5)
+					h = h - 100 + opp_attack;
 				else
-					h = h - 700 + opp_attack;
+					h = h - 100;
+			}
+			else if(count == 4){
+				if(K==5){
+					if(num_opp==(M-2))
+						h = h - 22000 + opp_attack;
+					else
+						h = h - 20000 + opp_attack;							
+				}
+				else{
+					h = h - 20000 + opp_attack;
+				}
+			}
+			else if(count >= 5 && K==5){
+				h = h - 21000 + opp_attack;
+			}
+			else if(count >= 5 && K==6){
+				if(num_opp==(M-2))
+					h = h - 110000 + opp_attack;
+				else
+					h = h - 100000 + opp_attack;
 			}
 		}
 		count = 0;
@@ -1099,12 +1169,26 @@ double calculateHeuristic(Boardclass& b,int *opp_rings_x,int *opp_rings_y,int *m
 			}
 			else{
 				if(my_count!=0){
-					if(my_count < (K-2))
-						h = h + pow(4,my_count);
-					else if(my_count == (K-2)) 
-						h = h + pow(4,my_count) - my_attack;
-					else if(my_count>(K-2))
-						h = h + 700 - my_attack;
+					if(my_count == 1)
+						h = h + 1;
+					else if(my_count == 2){
+						h = h + 5;
+					}
+					else if(my_count == 3){
+						if(K==5)
+							h = h + 100 - my_attack;
+						else
+							h = h + 100;
+					}
+					else if(my_count == 4){
+						h = h + 20000 - my_attack;
+					}
+					else if(my_count >= 5 && K==5){
+						h = h + 21000 - my_attack;
+					}
+					else if(my_count >= 5 && K==6){
+						h = h + 100000 - my_attack;
+					}
 				}
 				my_count = 0;
 				my_attack = 0;
@@ -1117,15 +1201,36 @@ double calculateHeuristic(Boardclass& b,int *opp_rings_x,int *opp_rings_y,int *m
 			}
 			else{
 				if(count!=0){
-					if(count < (K-2))
-						h = h - pow(4,count);
-					else if(count==(K-2))
-						h = h - pow(4,count) + opp_attack;
-					else if(count>(K-2)){
-						if(num_opp==(M-2))
-							h = h - 1200 + opp_attack;
+					if(count == 1)
+						h = h - 1;
+					else if(count == 2){
+						h = h - 5;
+					}
+					else if(count == 3){
+						if(K==5)
+							h = h - 100 + opp_attack;
 						else
-							h = h - 700 + opp_attack;
+							h = h - 100;
+					}
+					else if(count == 4){
+						if(K==5){
+							if(num_opp==(M-2))
+								h = h - 22000 + opp_attack;
+							else
+								h = h - 20000 + opp_attack;							
+						}
+						else{
+							h = h - 20000 + opp_attack;
+						}
+					}
+					else if(count >= 5 && K==5){
+						h = h - 21000 + opp_attack;
+					}
+					else if(count >= 5 && K==6){
+						if(num_opp==(M-2))
+							h = h - 110000 + opp_attack;
+						else
+							h = h - 100000 + opp_attack;
 					}
 				}
 				count = 0;
@@ -1133,26 +1238,61 @@ double calculateHeuristic(Boardclass& b,int *opp_rings_x,int *opp_rings_y,int *m
 			}
 		}
 		if(my_count!=0){
-			if(my_count < (K-2))
-				h = h + pow(4,my_count);
-			else if(my_count == (K-2)) 
-				h = h + pow(4,my_count) - my_attack;
-			else if(my_count>(K-2))
-				h = h + 700 - my_attack;
+			if(my_count == 1)
+				h = h + 1;
+			else if(my_count == 2){
+				h = h + 5;
+			}
+			else if(my_count == 3){
+				if(K==5)
+					h = h + 100 - my_attack;
+				else
+					h = h + 100;
+			}
+			else if(my_count == 4){
+				h = h + 20000 - my_attack;
+			}
+			else if(my_count >= 5 && K==5){
+				h = h + 21000 - my_attack;
+			}
+			else if(my_count >= 5 && K==6){
+				h = h + 100000 - my_attack;
+			}
 		}
 		my_count = 0;
 		my_attack = 0;
 
 		if(count!=0){
-			if(count < (K-2))
-				h = h - pow(4,count);
-			else if(count==(K-2))
-				h = h - pow(4,count) + opp_attack;
-			else if(count>(K-2)){
-				if(num_opp==(M-2))
-					h = h - 1200 + opp_attack;
+			if(count == 1)
+				h = h - 1;
+			else if(count == 2){
+				h = h - 5;
+			}
+			else if(count == 3){
+				if(K==5)
+					h = h - 100 + opp_attack;
 				else
-					h = h - 700 + opp_attack;
+					h = h - 100;
+			}
+			else if(count == 4){
+				if(K==5){
+					if(num_opp==(M-2))
+						h = h - 22000 + opp_attack;
+					else
+						h = h - 20000 + opp_attack;							
+				}
+				else{
+					h = h - 20000 + opp_attack;
+				}
+			}
+			else if(count >= 5 && K==5){
+				h = h - 21000 + opp_attack;
+			}
+			else if(count >= 5 && K==6){
+				if(num_opp==(M-2))
+					h = h - 110000 + opp_attack;
+				else
+					h = h - 100000 + opp_attack;
 			}
 		}
 		count = 0;
@@ -1176,12 +1316,26 @@ double calculateHeuristic(Boardclass& b,int *opp_rings_x,int *opp_rings_y,int *m
 			}
 			else{
 				if(my_count!=0){
-					if(my_count < (K-2))
-						h = h + pow(4,my_count);
-					else if(my_count == (K-2)) 
-						h = h + pow(4,my_count) - my_attack;
-					else if(my_count>(K-2))
-						h = h + 700 - my_attack;
+					if(my_count == 1)
+						h = h + 1;
+					else if(my_count == 2){
+						h = h + 5;
+					}
+					else if(my_count == 3){
+						if(K==5)
+							h = h + 100 - my_attack;
+						else
+							h = h + 100;
+					}
+					else if(my_count == 4){
+						h = h + 20000 - my_attack;
+					}
+					else if(my_count >= 5 && K==5){
+						h = h + 21000 - my_attack;
+					}
+					else if(my_count >= 5 && K==6){
+						h = h + 100000 - my_attack;
+					}
 				}
 				my_count = 0;
 				my_attack = 0;
@@ -1193,15 +1347,36 @@ double calculateHeuristic(Boardclass& b,int *opp_rings_x,int *opp_rings_y,int *m
 			}
 			else{
 				if(count!=0){
-					if(count < (K-2))
-						h = h - pow(4,count);
-					else if(count==(K-2))
-						h = h - pow(4,count) + opp_attack;
-					else if(count>(K-2)){
-						if(num_opp==(M-2))
-							h = h - 1200 + opp_attack;
+					if(count == 1)
+						h = h - 1;
+					else if(count == 2){
+						h = h - 5;
+					}
+					else if(count == 3){
+						if(K==5)
+							h = h - 100 + opp_attack;
 						else
-							h = h - 700 + opp_attack;
+							h = h - 100;
+					}
+					else if(count == 4){
+						if(K==5){
+							if(num_opp==(M-2))
+								h = h - 22000 + opp_attack;
+							else
+								h = h - 20000 + opp_attack;							
+						}
+						else{
+							h = h - 20000 + opp_attack;
+						}
+					}
+					else if(count >= 5 && K==5){
+						h = h - 21000 + opp_attack;
+					}
+					else if(count >= 5 && K==6){
+						if(num_opp==(M-2))
+							h = h - 110000 + opp_attack;
+						else
+							h = h - 100000 + opp_attack;
 					}
 				}
 				count = 0;
@@ -1211,26 +1386,61 @@ double calculateHeuristic(Boardclass& b,int *opp_rings_x,int *opp_rings_y,int *m
 		j++;						
 		}
 		if(my_count!=0){
-			if(my_count < (K-2))
-				h = h + pow(4,my_count);
-			else if(my_count == (K-2)) 
-				h = h + pow(4,my_count) - my_attack;
-			else if(my_count>(K-2))
-				h = h + 700 - my_attack;
+			if(my_count == 1)
+				h = h + 1;
+			else if(my_count == 2){
+				h = h + 5;
+			}
+			else if(my_count == 3){
+				if(K==5)
+					h = h + 100 - my_attack;
+				else
+					h = h + 100;
+			}
+			else if(my_count == 4){
+				h = h + 20000 - my_attack;
+			}
+			else if(my_count >= 5 && K==5){
+				h = h + 21000 - my_attack;
+			}
+			else if(my_count >= 5 && K==6){
+				h = h + 100000 - my_attack;
+			}
 		}
 		my_count = 0;
 		my_attack = 0;
 
 		if(count!=0){
-			if(count < (K-2))
-				h = h - pow(4,count);
-			else if(count==(K-2))
-				h = h - pow(4,count) + opp_attack;
-			else if(count>(K-2)){
-				if(num_opp==(M-2))
-					h = h - 1200 + opp_attack;
+			if(count == 1)
+				h = h - 1;
+			else if(count == 2){
+				h = h - 5;
+			}
+			else if(count == 3){
+				if(K==5)
+					h = h - 100 + opp_attack;
 				else
-					h = h - 700 + opp_attack;
+					h = h - 100;
+			}
+			else if(count == 4){
+				if(K==5){
+					if(num_opp==(M-2))
+						h = h - 22000 + opp_attack;
+					else
+						h = h - 20000 + opp_attack;							
+				}
+				else{
+					h = h - 20000 + opp_attack;
+				}
+			}
+			else if(count >= 5 && K==5){
+				h = h - 21000 + opp_attack;
+			}
+			else if(count >= 5 && K==6){
+				if(num_opp==(M-2))
+					h = h - 110000 + opp_attack;
+				else
+					h = h - 100000 + opp_attack;
 			}
 		}
 		count = 0;
@@ -1255,12 +1465,26 @@ double calculateHeuristic(Boardclass& b,int *opp_rings_x,int *opp_rings_y,int *m
 			}
 			else{
 				if(my_count!=0){
-					if(my_count < (K-2))
-						h = h + pow(4,my_count);
-					else if(my_count == (K-2)) 
-						h = h + pow(4,my_count) - my_attack;
-					else if(my_count>(K-2))
-						h = h + 700 - my_attack;
+					if(my_count == 1)
+						h = h + 1;
+					else if(my_count == 2){
+						h = h + 5;
+					}
+					else if(my_count == 3){
+						if(K==5)
+							h = h + 100 - my_attack;
+						else
+							h = h + 100;
+					}
+					else if(my_count == 4){
+						h = h + 20000 - my_attack;
+					}
+					else if(my_count >= 5 && K==5){
+						h = h + 21000 - my_attack;
+					}
+					else if(my_count >= 5 && K==6){
+						h = h + 100000 - my_attack;
+					}
 				}
 				my_count = 0;
 				my_attack = 0;
@@ -1272,15 +1496,36 @@ double calculateHeuristic(Boardclass& b,int *opp_rings_x,int *opp_rings_y,int *m
 			}
 			else{
 				if(count!=0){
-					if(count < (K-2))
-						h = h - pow(4,count);
-					else if(count==(K-2))
-						h = h - pow(4,count) + opp_attack;
-					else if(count>(K-2)){
-						if(num_opp==(M-2))
-							h = h - 1200 + opp_attack;
+					if(count == 1)
+						h = h - 1;
+					else if(count == 2){
+						h = h - 5;
+					}
+					else if(count == 3){
+						if(K==5)
+							h = h - 100 + opp_attack;
 						else
-							h = h - 700 + opp_attack;
+							h = h - 100;
+					}
+					else if(count == 4){
+						if(K==5){
+							if(num_opp==(M-2))
+								h = h - 22000 + opp_attack;
+							else
+								h = h - 20000 + opp_attack;							
+						}
+						else{
+							h = h - 20000 + opp_attack;
+						}
+					}
+					else if(count >= 5 && K==5){
+						h = h - 21000 + opp_attack;
+					}
+					else if(count >= 5 && K==6){
+						if(num_opp==(M-2))
+							h = h - 110000 + opp_attack;
+						else
+							h = h - 100000 + opp_attack;
 					}
 				}
 				count = 0;
@@ -1290,26 +1535,61 @@ double calculateHeuristic(Boardclass& b,int *opp_rings_x,int *opp_rings_y,int *m
 			j++;			
 		}
 		if(my_count!=0){
-			if(my_count < (K-2))
-				h = h + pow(4,my_count);
-			else if(my_count == (K-2)) 
-				h = h + pow(4,my_count) - my_attack;
-			else if(my_count>(K-2))
-				h = h + 700 - my_attack;
+			if(my_count == 1)
+				h = h + 1;
+			else if(my_count == 2){
+				h = h + 5;
+			}
+			else if(my_count == 3){
+				if(K==5)
+					h = h + 100 - my_attack;
+				else
+					h = h + 100;
+			}
+			else if(my_count == 4){
+				h = h + 20000 - my_attack;
+			}
+			else if(my_count >= 5 && K==5){
+				h = h + 21000 - my_attack;
+			}
+			else if(my_count >= 5 && K==6){
+				h = h + 100000 - my_attack;
+			}
 		}
 		my_count = 0;
 		my_attack = 0;
 
 		if(count!=0){
-			if(count < (K-2))
-				h = h - pow(4,count);
-			else if(count==(K-2))
-				h = h - pow(4,count) + opp_attack;
-			else if(count>(K-2)){
-				if(num_opp==(M-2))
-					h = h - 1200 + opp_attack;
+			if(count == 1)
+				h = h - 1;
+			else if(count == 2){
+				h = h - 5;
+			}
+			else if(count == 3){
+				if(K==5)
+					h = h - 100 + opp_attack;
 				else
-					h = h - 700 + opp_attack;
+					h = h - 100;
+			}
+			else if(count == 4){
+				if(K==5){
+					if(num_opp==(M-2))
+						h = h - 22000 + opp_attack;
+					else
+						h = h - 20000 + opp_attack;							
+				}
+				else{
+					h = h - 20000 + opp_attack;
+				}
+			}
+			else if(count >= 5 && K==5){
+				h = h - 21000 + opp_attack;
+			}
+			else if(count >= 5 && K==6){
+				if(num_opp==(M-2))
+					h = h - 110000 + opp_attack;
+				else
+					h = h - 100000 + opp_attack;
 			}
 		}
 		count = 0;
@@ -1880,7 +2160,7 @@ int main(){
 		//cout<<"your move";//code it
 		Node* nod_pointer = new Node(1);
 		flag2 = 0;
-		createTree ( nod_pointer, 0, 1, 1, main_board,-1000000,1000000);
+		createTree ( nod_pointer, 0, 1, 1, main_board,-1000000000,1000000000);
 		main_board.find_rings(opp_rings_x,opp_rings_y,my_rings_x,my_rings_y,num_opp,num_my);
 
 		if(num_my != nod_pointer->num_myrings){
@@ -1901,7 +2181,7 @@ int main(){
 		}
 
 		if(flag2!=1){
-			createTree ( nod_pointer, 0, 3, 1, main_board,-1000000,1000000);
+			createTree ( nod_pointer, 0, 3, 1, main_board,-1000000000,1000000000);
 			// cout<<"after create tree\n";
 			// cout<<"\n";
 			// for(int i=0;i<11;i++){
